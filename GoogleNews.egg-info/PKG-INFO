@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: GoogleNews
-Version: 1.0.0
+Version: 1.1.0
 Summary: Google News search for Python
 Home-page: https://github.com/HurinHu/GoogleNews
 Author: Hurin Hu
@@ -16,6 +16,7 @@ Description: # GoogleNews
         ## Usage
         - Initializing
         ```
+        from GoogleNews import GoogleNews
         googlenews = GoogleNews()
         ```
         - Search keyword
@@ -45,6 +46,7 @@ Description: # GoogleNews
         ```
         googlenews.clear()
         ```
+        
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License

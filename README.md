@@ -8,6 +8,7 @@ pip install GoogleNews
 ## Usage
 - Initializing
 ```
+from GoogleNews import GoogleNews
 googlenews = GoogleNews()
 ```
 - Search keyword

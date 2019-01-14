@@ -1,7 +1,6 @@
 README.md
 setup.py
 GoogleNews/__init__.py
-GoogleNews/googlenews.py
 GoogleNews.egg-info/PKG-INFO
 GoogleNews.egg-info/SOURCES.txt
 GoogleNews.egg-info/dependency_links.txt
