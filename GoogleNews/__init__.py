@@ -1,4 +1,3 @@
-import bs4, sys
 from bs4 import BeautifulSoup as soup
 import urllib.request
 
@@ -37,7 +36,7 @@ class GoogleNews():
         def gettext(self):
                 return self.texts
 
-        def getlink(self):
+        def getlinks(self):
                 return self.links
 
         def clear(self):

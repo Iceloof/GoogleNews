@@ -4,7 +4,10 @@
 ```
 pip install GoogleNews
 ```
-
+or
+```
+pip install --upgrade GoogleNews
+```
 ## Usage
 - Initializing
 ```

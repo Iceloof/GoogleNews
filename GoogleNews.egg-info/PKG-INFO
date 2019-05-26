@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: GoogleNews
-Version: 1.1.1
+Version: 1.2.0
 Summary: Google News search for Python
 Home-page: https://github.com/HurinHu/GoogleNews
 Author: Hurin Hu
@@ -12,7 +12,10 @@ Description: # GoogleNews
         ```
         pip install GoogleNews
         ```
-        
+        or
+        ```
+        pip install --upgrade GoogleNews
+        ```
         ## Usage
         - Initializing
         ```
