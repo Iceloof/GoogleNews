@@ -9,7 +9,7 @@ class GoogleNews():
                 self.results = []
 
         def search(self, key):
-                self.key = key
+                self.key = "+".join(key.split(" "))
                 self.getpage()
 
         def getpage(self, page=1):
