@@ -21,13 +21,14 @@ class GoogleNews():
                         self.response=urllib.request.urlopen(self.req)
                         self.page=self.response.read()
                         self.content=soup(self.page, "html.parser")
-                        result=self.content.find(id="ires").find_all("div", class_="g")
+                        result=self.content.find_all("div", class_="g")
                         for item in result:
                                 self.texts.append(item.find("h3").text)
                                 self.links.append(item.find("h3").find("a").get("href"))
                                 self.results.append({'title':item.find("h3").text,'media':item.find("div", class_="slp").find_all("span")[0].text,'date':item.find("div", class_="slp").find_all("span")[2].text,'desc':item.find("div", class_="st").text,'link':item.find("h3").find("a").get("href"),'img':item.find("img").get("src")})
                         self.response.close()
-                except Exception:
+                except Exception as e:
+                        print(e)
                         pass
 
         def result(self):
