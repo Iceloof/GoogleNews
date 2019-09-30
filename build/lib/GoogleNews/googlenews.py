@@ -21,7 +21,7 @@ class GoogleNews():
                 self.response=urllib.request.urlopen(self.req)
                 self.page=self.response.read()
                 self.content=soup(self.page, "html.parser")
-                result=self.content.find(id="ires").find_all("div", class_="g")
+                result=self.content.find_all("div", class_="g")
                 for item in result:
                         self.texts.append(item.find("h3").text)
                         self.links.append(item.find("h3").find("a").get("href"))
