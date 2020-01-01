@@ -80,6 +80,10 @@ class GoogleNews:
                     except:
                         time = None
                     try:
+                        site = item.find("time").parent.find("a").text
+                    except:
+                        site = None
+                    try:
                         img = item.previous_sibling.find("img").get("src")
                     except:
                         img = None
@@ -92,6 +96,7 @@ class GoogleNews:
                          'title': title,
                          'datetime': datetime,
                          'time': time,
+                         'site': site,
                          'desc': desc,
                          'link': link,
                          'media': None,
