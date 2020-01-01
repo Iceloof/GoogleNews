@@ -84,7 +84,7 @@ class GoogleNews:
                     except:
                         site = None
                     try:
-                        img = item.previous_sibling.find("img").get("src")
+                        img = item.find("img").get("src")
                     except:
                         img = None
                     desc = None
