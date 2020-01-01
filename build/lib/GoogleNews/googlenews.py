@@ -1,4 +1,3 @@
-import bs4, sys
 import urllib.request
 
 from bs4 import BeautifulSoup as Soup
@@ -45,29 +44,59 @@ class GoogleNews:
             self.response = urllib.request.urlopen(self.req)
             self.page = self.response.read()
             self.content = Soup(self.page, "html.parser")
-            result = self.content.find_all("article")
+            self.content = self.content.find("h2").parent.parent.parent
+            result = self.content.findChildren("div", recursive=False)
+            # section_headings = self.content.find_all("h2")
+            # sections = []
+            # for section in section_headings:
+            #     sections.append(section.find("a").text)
+            # result = self.content.find_all("article")
+            # current_section = sections[0]
+            section = None
+
             for item in result:
                 try:
+                    try:
+                        section = item.find("h2").find("a").text
+                    except Exception as sec_e:
+                        pass
                     title = item.find("h3").text
                     if deamplify:
                         try:
-                            link = item.find("a").get("jslog").split('2:')[1].split(';')[0]
-                        except Exception as e:
-                            print(e)
+                            link = item.find("article").find("a").get("jslog").split('2:')[1].split(';')[0]
+                        except Exception as deamp_e:
+                            print(deamp_e)
                             link = item.find("h3").find("a").get("href")
                     else:
                         link = item.find("h3").find("a").get("href")
                     self.texts.append(title)
                     self.links.append(link)
+                    try:
+                        datetime = item.find("time").get("datetime")
+                    except:
+                        datetime = None
+                    try:
+                        time = item.find("time").text
+                    except:
+                        time = None
+                    try:
+                        img = item.previous_sibling.find("img").get("src")
+                    except:
+                        img = None
+                    desc = None
+                    if link.startswith('https://www.youtube.com/watch?v='):
+                        desc = 'video'
+
                     self.results.append(
-                        {'title': title,
-                         'datetime': item.find("time").get("datetime"),
-                         'time': item.find("time").text,
-                         'desc': item.find("h3").next_sibling.text,
+                        {'section': section,
+                         'title': title,
+                         'datetime': datetime,
+                         'time': time,
+                         'desc': desc,
                          'link': link,
                          'media': None,
-                         'img': item.previous_sibling.find("img").get("src")})
-                except Exception as e:
+                         'img': img})
+                except Exception as big_e:
                     pass
             self.response.close()
         except Exception as e:
