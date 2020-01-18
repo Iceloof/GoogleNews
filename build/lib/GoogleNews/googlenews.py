@@ -46,12 +46,6 @@ class GoogleNews:
             self.content = Soup(self.page, "html.parser")
             self.content = self.content.find("h2").parent.parent.parent
             result = self.content.findChildren("div", recursive=False)
-            # section_headings = self.content.find_all("h2")
-            # sections = []
-            # for section in section_headings:
-            #     sections.append(section.find("a").text)
-            # result = self.content.find_all("article")
-            # current_section = sections[0]
             section = None
 
             for item in result:
@@ -63,10 +57,10 @@ class GoogleNews:
                     title = item.find("h3").text
                     if deamplify:
                         try:
-                            link = item.find("article").find("a").get("jslog").split('2:')[1].split(';')[0]
+                            link = item.find("article").get("jslog").split('2:')[1].split(';')[0]
                         except Exception as deamp_e:
                             print(deamp_e)
-                            link = item.find("h3").find("a").get("href")
+                            link = 'news.google.com/' + item.find("h3").find("a").get("href")
                     else:
                         link = item.find("h3").find("a").get("href")
                     self.texts.append(title)
