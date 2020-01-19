@@ -25,16 +25,35 @@ class GoogleNews:
             self.content = Soup(self.page, "html.parser")
             result = self.content.find_all("div", class_="g")
             for item in result:
-                self.texts.append(item.find("h3").text)
-                self.links.append(item.find("h3").find("a").get("href"))
-                self.results.append(
-                    {'title': item.find("h3").text, 'media': item.find("div", class_="slp").find_all("span")[0].text,
-                     'date': item.find("div", class_="slp").find_all("span")[2].text,
-                     'desc': item.find("div", class_="st").text, 'link': item.find("h3").find("a").get("href"),
-                     'img': item.find("img").get("src")})
+                try:
+                    tmp_text = item.find("h3").text
+                except Exception:
+                    tmp_text = ''
+                try:
+                    tmp_link = item.find("h3").find("a").get("href")
+                except Exception:
+                    tmp_link = ''
+                try:
+                    tmp_media = item.find("div", class_="slp").find_all("span")[0].text
+                except Exception:
+                    tmp_media = ''
+                try:
+                    tmp_date = item.find("div", class_="slp").find_all("span")[2].text
+                except Exception:
+                    tmp_date = ''
+                try:
+                    tmp_desc = item.find("div", class_="st").text
+                except Exception:
+                    tmp_desc = ''
+                try:
+                    tmp_img = item.find("img").get("src")
+                except Exception:
+                    tmp_img = ''
+                self.texts.append(tmp_text)
+                self.links.append(tmp_link)
+                self.results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
             self.response.close()
-        except Exception as e:
-            print(e)
+        except Exception:
             pass
 
     def get_news(self, deamplify=False):
@@ -47,7 +66,6 @@ class GoogleNews:
             self.content = self.content.find("h2").parent.parent.parent
             result = self.content.findChildren("div", recursive=False)
             section = None
-
             for item in result:
                 try:
                     try:
