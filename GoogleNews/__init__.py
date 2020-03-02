@@ -5,19 +5,38 @@ from bs4 import BeautifulSoup as Soup
 
 class GoogleNews:
 
-    def __init__(self):
-        self.texts = []
-        self.links = []
-        self.results = []
+    def __init__(self,lang="en"):
+        self.__texts = []
+        self.__links = []
+        self.__results = []
         self.user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0'
         self.headers = {'User-Agent': self.user_agent}
+        self.__lang = lang
+
+    def setlang(self, lang):
+        self.__lang = lang
 
     def search(self, key):
-        self.key = "+".join(key.split(" "))
+        """
+        Searches for a term in google news and retrieves the first page into __results.
+        
+        Parameters:
+        key = the search term
+        """
+        self.__key = "+".join(key.split(" "))
         self.getpage()
 
     def getpage(self, page=1):
-        self.url = "https://www.google.com/search?q=" + self.key + "&tbm=nws&start=%d" % (10 * (page - 1))
+        """
+        Retrieves a specific page from google news into __results.
+
+        Parameter:
+        page = number of the page to be retrieved 
+        """
+        try:
+            self.url = "https://www.google.com/search?q={}&lr=lang_{}&tbs=lr:lang_1{},qdr:h&tbm=nws&start={}".format(self.__key,self.__lang,self.__lang,(10 * (page - 1))) 
+        except AttributeError:
+            raise AttributeError("You need to run a search() before using getpage().")
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
             self.response = urllib.request.urlopen(self.req)
@@ -49,15 +68,15 @@ class GoogleNews:
                     tmp_img = item.find("img").get("src")
                 except Exception:
                     tmp_img = ''
-                self.texts.append(tmp_text)
-                self.links.append(tmp_link)
-                self.results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
+                self.__texts.append(tmp_text)
+                self.__links.append(tmp_link)
+                self.__results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
             self.response.close()
         except Exception:
             pass
 
     def get_news(self, deamplify=False):
-        self.url = 'https://news.google.com/'
+        self.url = 'https://news.google.com/?hl={}'.format(self.__lang)
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
             self.response = urllib.request.urlopen(self.req)
@@ -81,8 +100,8 @@ class GoogleNews:
                             link = 'news.google.com/' + item.find("h3").find("a").get("href")
                     else:
                         link = item.find("h3").find("a").get("href")
-                    self.texts.append(title)
-                    self.links.append(link)
+                    self.__texts.append(title)
+                    self.__links.append(link)
                     try:
                         datetime = item.find("time").get("datetime")
                     except:
@@ -103,7 +122,7 @@ class GoogleNews:
                     if link.startswith('https://www.youtube.com/watch?v='):
                         desc = 'video'
 
-                    self.results.append(
+                    self.__results.append(
                         {'section': section,
                          'title': title,
                          'datetime': datetime,
@@ -121,15 +140,18 @@ class GoogleNews:
             pass
 
     def result(self):
-        return self.results
+        """Returns the __results."""
+        return self.__results
 
     def gettext(self):
-        return self.texts
+        """Returns only the __texts of the __results."""
+        return self.__texts
 
-    def getlinks(self):
-        return self.links
+    def get__links(self):
+        """Returns only the __links of the __results."""
+        return self.__links
 
     def clear(self):
-        self.texts = []
-        self.links = []
-        self.results = []
+        self.__texts = []
+        self.__links = []
+        self.__results = []
