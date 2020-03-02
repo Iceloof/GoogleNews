@@ -11,7 +11,7 @@ class GoogleNews:
         self.__results = []
         self.user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0'
         self.headers = {'User-Agent': self.user_agent}
-        self.__lang = "en"
+        self.__lang = lang
 
     def setlang(self, lang):
         self.__lang = lang
