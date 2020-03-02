@@ -5,19 +5,26 @@ from bs4 import BeautifulSoup as Soup
 
 class GoogleNews:
 
-    def __init__(self):
+    def __init__(self,lang="en"):
         self.texts = []
         self.links = []
         self.results = []
         self.user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0'
         self.headers = {'User-Agent': self.user_agent}
+        self.lang = "en"
+
+    def setlang(self, lang):
+        self.lang = lang
 
     def search(self, key):
         self.key = "+".join(key.split(" "))
         self.getpage()
 
     def getpage(self, page=1):
-        self.url = "https://www.google.com/search?q=" + self.key + "&tbm=nws&start=%d" % (10 * (page - 1))
+        try:
+            self.url = "https://www.google.com/search?q={}&lr=lang_{}&tbs=lr:lang_1{},qdr:h&tbm=nws&start={}".format(self.key,self.lang,self.lang,(10 * (page - 1))) 
+        except AttributeError:
+            raise AttributeError("You need to run a search() before using getpage().")
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
             self.response = urllib.request.urlopen(self.req)
@@ -57,7 +64,7 @@ class GoogleNews:
             pass
 
     def get_news(self, deamplify=False):
-        self.url = 'https://news.google.com/'
+        self.url = 'https://news.google.com/?hl={}'.format(self.lang)
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
             self.response = urllib.request.urlopen(self.req)
