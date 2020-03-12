@@ -17,7 +17,7 @@ class GoogleNews:
     def setlang(self, lang):
         self.__lang = lang
 
-    def setperiod(self, lang):
+    def setperiod(self, period):
         self.__period = period
 
     def search(self, key):
