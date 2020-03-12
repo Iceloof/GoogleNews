@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: GoogleNews
-Version: 1.3.3
+Version: 1.3.5
 Summary: Google News search for Python
 Home-page: https://github.com/HurinHu/GoogleNews
 Author: Hurin Hu
@@ -22,13 +22,14 @@ Description: # GoogleNews
         from GoogleNews import GoogleNews
         googlenews = GoogleNews()
         ```
-        - Optional choose language
+        - Optional choose language and period
         ```
-        googlenews = GoogleNews('en')
+        googlenews = GoogleNews('en','d')
         ```
         or
         ```
         googlenews.setlang('en')
+        googlenews.setperiod('d')
         ```
         - Search keyword
         Default return first page result

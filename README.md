@@ -14,13 +14,14 @@ pip install --upgrade GoogleNews
 from GoogleNews import GoogleNews
 googlenews = GoogleNews()
 ```
-- Optional choose language
+- Optional choose language and period
 ```
-googlenews = GoogleNews('en')
+googlenews = GoogleNews('en','d')
 ```
 or
 ```
 googlenews.setlang('en')
+googlenews.setperiod('d')
 ```
 - Search keyword
 Default return first page result

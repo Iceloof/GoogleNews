@@ -5,16 +5,20 @@ from bs4 import BeautifulSoup as Soup
 
 class GoogleNews:
 
-    def __init__(self,lang="en"):
+    def __init__(self,lang="en",period="d"):
         self.__texts = []
         self.__links = []
         self.__results = []
         self.user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0'
         self.headers = {'User-Agent': self.user_agent}
         self.__lang = lang
+        self.__period = period
 
     def setlang(self, lang):
         self.__lang = lang
+
+    def setperiod(self, lang):
+        self.__period = period
 
     def search(self, key):
         """
@@ -34,7 +38,7 @@ class GoogleNews:
         page = number of the page to be retrieved 
         """
         try:
-            self.url = "https://www.google.com/search?q={}&lr=lang_{}&tbs=lr:lang_1{},qdr:h&tbm=nws&start={}".format(self.__key,self.__lang,self.__lang,(10 * (page - 1))) 
+            self.url = "https://www.google.com/search?q={}&lr=lang_{}&tbs=lr:lang_1{},qdr:{}&tbm=nws&start={}".format(self.__key,self.__lang,self.__lang,self.__period,(10 * (page - 1))) 
         except AttributeError:
             raise AttributeError("You need to run a search() before using getpage().")
         try:
