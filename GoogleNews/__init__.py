@@ -57,11 +57,11 @@ class GoogleNews:
                 except Exception:
                     tmp_link = ''
                 try:
-                    tmp_media = item.find("div", class_="slp").find_all("span")[0].text
+                    tmp_media = item.find("h3").findNext('div').find_all("span")[0].text
                 except Exception:
                     tmp_media = ''
                 try:
-                    tmp_date = item.find("div", class_="slp").find_all("span")[2].text
+                    tmp_date = item.find("h3").findNext('div').find_all("span")[2].text
                 except Exception:
                     tmp_date = ''
                 try:
