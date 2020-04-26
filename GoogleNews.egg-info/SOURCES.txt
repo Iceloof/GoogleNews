@@ -1,12 +1,8 @@
-.DS_Store
-._README.md
-._setup.py
 .gitignore
 LICENSE
 README.md
 setup.py
 GoogleNews/.DS_Store
-GoogleNews/.___init__.py
 GoogleNews/__init__.py
 GoogleNews.egg-info/PKG-INFO
 GoogleNews.egg-info/SOURCES.txt

@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup as Soup
 
 class GoogleNews:
 
-    def __init__(self,lang="en",period="d"):
+    def __init__(self,lang="en",period="",start="",end=""):
         self.__texts = []
         self.__links = []
         self.__results = []
@@ -13,6 +13,8 @@ class GoogleNews:
         self.headers = {'User-Agent': self.user_agent}
         self.__lang = lang
         self.__period = period
+        self.__start = start
+        self.__end = end
 
     def setlang(self, lang):
         self.__lang = lang
@@ -20,6 +22,10 @@ class GoogleNews:
     def setperiod(self, period):
         self.__period = period
 
+    def setTimeRange(self, start, end):
+        self.__start = start
+        self.__end = end
+        
     def search(self, key):
         """
         Searches for a term in google news and retrieves the first page into __results.
@@ -38,7 +44,12 @@ class GoogleNews:
         page = number of the page to be retrieved 
         """
         try:
-            self.url = "https://www.google.com/search?q={}&lr=lang_{}&tbs=lr:lang_1{},qdr:{}&tbm=nws&start={}".format(self.__key,self.__lang,self.__lang,self.__period,(10 * (page - 1))) 
+            if self.__start != "" and self.__end != "":
+                self.url = "https://www.google.com/search?q={}&lr=lang_{}&tbs=lr:lang_1{},cdr:1,cd_min:{},cd_max:{}&tbm=nws&start={}".format(self.__key,self.__lang,self.__lang,self.__start,self.__end,(10 * (page - 1)))
+            elif self.__period != "":
+                self.url = "https://www.google.com/search?q={}&lr=lang_{}&tbs=lr:lang_1{},qdr:{},&tbm=nws&start={}".format(self.__key,self.__lang,self.__lang,self.__period,(10 * (page - 1))) 
+            else:
+                self.url = "https://www.google.com/search?q={}&lr=lang_{}&tbs=lr:lang_1{}&tbm=nws&start={}".format(self.__key,self.__lang,self.__lang,(10 * (page - 1))) 
         except AttributeError:
             raise AttributeError("You need to run a search() before using getpage().")
         try:
