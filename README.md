@@ -1,5 +1,16 @@
 # GoogleNews
 
+![Travis (.com)](https://img.shields.io/travis/com/HurinHu/GoogleNews)
+![Coveralls github](https://img.shields.io/coveralls/github/HurinHu/GoogleNews)
+![PyPI](https://img.shields.io/pypi/v/GoogleNews)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/GoogleNews)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/GoogleNews)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/GoogleNews)
+![GitHub contributors](https://img.shields.io/github/contributors/HurinHu/GoogleNews)
+![GitHub issues](https://img.shields.io/github/issues-raw/HurinHu/GoogleNews)
+![Upload Python Package](https://github.com/HurinHu/GoogleNews/workflows/Upload%20Python%20Package/badge.svg)
+![GitHub](https://img.shields.io/github/license/HurinHu/GoogleNews)
+
 ## Install
 ```
 pip install GoogleNews

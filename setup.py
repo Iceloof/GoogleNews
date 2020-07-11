@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="GoogleNews",
-    version="1.3.8",
+    version="1.3.9",
     author="Hurin Hu",
     author_email="hurin@live.ca",
     description="Google News search for Python",
@@ -15,7 +15,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=['beautifulsoup4'],
     classifiers=[
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],

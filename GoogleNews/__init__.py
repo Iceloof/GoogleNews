@@ -2,7 +2,6 @@ import urllib.request
 
 from bs4 import BeautifulSoup as Soup
 
-
 class GoogleNews:
 
     def __init__(self,lang="en",period="",start="",end=""):
@@ -57,30 +56,30 @@ class GoogleNews:
             self.response = urllib.request.urlopen(self.req)
             self.page = self.response.read()
             self.content = Soup(self.page, "html.parser")
-            result = self.content.find_all("div", class_="g")
+            result = self.content.find_all("div", id="search")[0].find_all("g-card")
             for item in result:
                 try:
-                    tmp_text = item.find("h3").text
+                    tmp_text = item.find("div", {"role" : "heading"}).text.replace("\n","")
                 except Exception:
                     tmp_text = ''
                 try:
-                    tmp_link = item.find("h3").find("a").get("href")
+                    tmp_link = item.find("a").get("href")
                 except Exception:
                     tmp_link = ''
                 try:
-                    tmp_media = item.find("h3").findNext('div').find_all("span")[0].text
+                    tmp_media = item.findAll("g-img")[1].parent.text
                 except Exception:
                     tmp_media = ''
                 try:
-                    tmp_date = item.find("h3").findNext('div').find_all("span")[2].text
+                    tmp_date = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').findNext('div').text
                 except Exception:
                     tmp_date = ''
                 try:
-                    tmp_desc = item.find("div", class_="st").text
+                    tmp_desc = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').text.replace("\n","")
                 except Exception:
                     tmp_desc = ''
                 try:
-                    tmp_img = item.find("img").get("src")
+                    tmp_img = item.findAll("g-img")[0].find("img").get("src")
                 except Exception:
                     tmp_img = ''
                 self.__texts.append(tmp_text)

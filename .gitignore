@@ -1,5 +1,8 @@
 __pycache__/
+GoogleNews.egg-info/
 .DS_Store
 /venv
 .idea
 *.html
+._*
+.coverage
