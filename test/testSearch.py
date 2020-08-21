@@ -22,7 +22,7 @@ class NumbersTest(unittest.TestCase):
     print('Result length with two pages is correct')
 
   def testEncode(self):
-    googlenews = GoogleNews(encode='cp1251')
+    googlenews = GoogleNews(encode='utf-8')
     googlenews.search("Моцарт")
     length = len(googlenews.result())
     self.assertNotEqual(length, 0)
