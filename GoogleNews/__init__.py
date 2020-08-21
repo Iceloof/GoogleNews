@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup as Soup
 
 class GoogleNews:
 
-    def __init__(self,lang="en",period="",start="",end=""):
+    def __init__(self,lang="en",period="",start="",end="",encode="utf-8"):
         self.__texts = []
         self.__links = []
         self.__results = []
@@ -14,6 +14,7 @@ class GoogleNews:
         self.__period = period
         self.__start = start
         self.__end = end
+        self.__encode = encode
 
     def setlang(self, lang):
         self.__lang = lang
@@ -24,6 +25,9 @@ class GoogleNews:
     def setTimeRange(self, start, end):
         self.__start = start
         self.__end = end
+
+    def setencode(self, encode):
+        self.__encode = encode
         
     def search(self, key):
         """
@@ -33,6 +37,8 @@ class GoogleNews:
         key = the search term
         """
         self.__key = "+".join(key.split(" "))
+        if self.__encode != "":
+            self.__key = urllib.request.quote(self.__key.encode(self.__encode))
         self.getpage()
 
     def getpage(self, page=1):

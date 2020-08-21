@@ -37,11 +37,16 @@ googlenews = GoogleNews(period='d')
 ```
 googlenews = GoogleNews(start='02/01/2020',end='02/28/2020')
 ```
+- Optional set encode
+```
+googlenews = GoogleNews(encode='utf-8')
+```
 or
 ```
 googlenews.setlang('en')
 googlenews.setperiod('d')
 googlenews.setTimeRange('02/01/2020','02/28/2020')
+googlenews.setencode('utf-8')
 ```
 - Search keyword
 Default return first page result
