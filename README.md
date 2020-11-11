@@ -68,7 +68,7 @@ googlenews.gettext()
 ```
 or just get a list of news links
 ```
-googlenews.getlinks()
+googlenews.get__links()
 ```
 - Clear result list
 Clear result list before you get another search or page
