@@ -58,7 +58,7 @@ googlenews.search('APPL')
 googlenews.getpage(2)
 ```
 - Get result
-It will return a list, `[{'title': '...', 'media': '...', 'date': '...', desc': "...", 'link': '...', 'img': '...'}]`
+It will return a list, `[{'title': '...', 'media': '...', 'date': '...', 'desc': "...", 'link': '...', 'img': '...'}]`
 ```
 googlenews.result(sort=False)
 ```
