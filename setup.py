@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/HurinHu/GoogleNews",
     packages=setuptools.find_packages(),
-    install_requires=['beautifulsoup4'],
+    install_requires=['beautifulsoup4','dateparser'],
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "License :: OSI Approved :: MIT License",

@@ -1,5 +1,5 @@
 import urllib.request
-
+import dateparser
 from bs4 import BeautifulSoup as Soup
 
 class GoogleNews:
@@ -159,9 +159,21 @@ class GoogleNews:
             print(e)
             pass
 
-    def result(self):
-        """Returns the __results."""
-        return self.__results
+    def result(self,sort=False):
+        """Returns the __results.
+        New feature: include datatime and sort the articles in decreasing order"""
+        res=self.__results
+        if sort:
+            for gnew in res:
+                datetime_tmp=None
+                string_to_parse=gnew['date']
+                # While loop because often gnews fetch rubbish before the 'date'
+                while datetime_tmp==None:
+                    datetime_tmp=dateparser.parse(string_to_parse)
+                    gnew['datetime']=datetime_tmp
+                    string_to_parse=string_to_parse[1:]
+            res.sort(key = lambda x:x['datetime'],reverse=True)
+        return res
 
     def gettext(self):
         """Returns only the __texts of the __results."""

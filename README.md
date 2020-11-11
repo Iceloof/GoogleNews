@@ -58,9 +58,9 @@ googlenews.search('APPL')
 googlenews.getpage(2)
 ```
 - Get result
-It will return a list, `[{'title': '...', 'media': '...', 'date': '...', 'desc': "...", 'link': '...', 'img': '...'}]`
+It will return a list, `[{'title': '...', 'media': '...', 'date': '...', desc': "...", 'link': '...', 'img': '...'}]`
 ```
-googlenews.result()
+googlenews.result(sort=False)
 ```
 or just get a list of news titles
 ```
@@ -74,6 +74,10 @@ googlenews.get__links()
 Clear result list before you get another search or page
 ```
 googlenews.clear()
+```
+If sort=True one can order the results cronologically reversed and add the datetime parameter in the output list.
+```
+googlenews.result(sort=True)
 ```
 ## Issue
 - Image is not working in the latest version, it can only return default google loading gif
