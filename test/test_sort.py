@@ -12,18 +12,17 @@ def show_routine(results):
 ### MAIN
 
 # Setup the research
-keywords="covid italia"
+keywords="covid cava de' tirreni"
 period='10d'
 google_news = GoogleNews(lang='it',period=period)
 google=GoogleNews(lang='it',period=period)
 
 # Results from news.google.com
 google_news.get_news(keywords)
-results_gnews=google_news.result(sort=True)
+results_gnews=google_news.results(sort=True)
 show_routine(results_gnews)
 
 # Results from google.com
-# google_news.clear()
 google.search(keywords)
-results_google=google.result(sort=True)
+results_google=google.results(sort=True)
 show_routine(results_google)

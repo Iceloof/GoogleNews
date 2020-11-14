@@ -43,41 +43,43 @@ googlenews = GoogleNews(encode='utf-8')
 ```
 or
 ```
-googlenews.setlang('en')
-googlenews.setperiod('d')
-googlenews.setTimeRange('02/01/2020','02/28/2020')
-googlenews.setencode('utf-8')
+googlenews.set_lang('en')
+googlenews.set_period('d')
+googlenews.set_time_range('02/01/2020','02/28/2020')
+googlenews.set_encode('utf-8')
 ```
-- Search keyword
-Default return first page result
+- news.google.com search sample
 ```
-googlenews.search('APPL')
+googlenews.get_news('APPLE')
 ```
-- Get other page of search results
+- google.com section news search sample<br/>
+```
+googlenews.search('APPLE')
+```
+Default return first page result. To get other page of search results:
 ```
 googlenews.getpage(2)
 ```
-- Get result
-It will return a list, `[{'title': '...', 'media': '...', 'date': '...', desc': "...", 'link': '...', 'img': '...'}]`
+- Get results<br/>
+It will return the list, `[{'title': '...', 'media': '...', 'date': '...', 'datetime': '...', 'desc': '...', 'link': '...', 'img': '...'}]`
 ```
-googlenews.result(sort=False)
+googlenews.results()
 ```
-or just get a list of news titles
+if `googlenews.result(sort=True)` the tool will try to order the results in cronologically reversed order
+- Get texts<br/>
+It will return the list of news titles
 ```
-googlenews.gettext()
+googlenews.get_texts()
 ```
-or just get a list of news links
+- Get links<br/>
+It will returns the list of news links
 ```
-googlenews.getlinks()
+googlenews.get_links()
 ```
-- Clear result list
-Clear result list before you get another search or page
+- Clear result list<br/>
+Clear results list before doing another search with the same object
 ```
 googlenews.clear()
-```
-If sort=True one can order the results cronologically reversed and add the datetime parameter in the output list.
-```
-googlenews.result(sort=True)
 ```
 ## Issue
 - Image is not working in the latest version, it can only return default google loading gif

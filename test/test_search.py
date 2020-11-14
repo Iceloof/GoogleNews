@@ -20,7 +20,7 @@ class NumbersTest(unittest.TestCase):
   def testResultNumberWithTwoPages(self):
     googlenews = GoogleNews()
     googlenews.search(keyword)
-    googlenews.getpage(2)
+    googlenews.get_page(2)
     length = len(googlenews.result())
     self.assertEqual(length, 20)
     print('Result length with two pages is correct')

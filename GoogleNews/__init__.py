@@ -45,17 +45,17 @@ class GoogleNews:
         self.__end = end
         self.__encode = encode
 
-    def setlang(self, lang):
+    def set_lang(self, lang):
         self.__lang = lang
 
-    def setperiod(self, period):
+    def set_period(self, period):
         self.__period = period
 
-    def setTimeRange(self, start, end):
+    def set_time_range(self, start, end):
         self.__start = start
         self.__end = end
 
-    def setencode(self, encode):
+    def set_encode(self, encode):
         self.__encode = encode
         
     def search(self, key):
@@ -68,9 +68,9 @@ class GoogleNews:
         self.__key = "+".join(key.split(" "))
         if self.__encode != "":
             self.__key = urllib.request.quote(self.__key.encode(self.__encode))
-        self.getpage()
+        self.get_page()
 
-    def getpage(self, page=1):
+    def get_page(self, page=1):
         """
         Retrieves a specific page from google.com in the news sections into __results.
 
@@ -85,7 +85,7 @@ class GoogleNews:
             else:
                 self.url = "https://www.google.com/search?q={}&lr=lang_{}&tbs=lr:lang_1{}&tbm=nws&start={}".format(self.__key,self.__lang,self.__lang,(10 * (page - 1))) 
         except AttributeError:
-            raise AttributeError("You need to run a search() before using getpage().")
+            raise AttributeError("You need to run a search() before using get_page().")
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
             self.response = urllib.request.urlopen(self.req)
@@ -200,7 +200,7 @@ class GoogleNews:
             print(e_parser)
             pass
 
-    def result(self,sort=False):
+    def results(self,sort=False):
         """Returns the __results.
         New feature: include datatime and sort the articles in decreasing order"""
         results=self.__results
