@@ -3,6 +3,7 @@ python:
   - "3.6"
 # command to install dependencies
 install:
+  - pip install dateparser
   - pip install beautifulsoup4
   - pip install coverage
   - pip install coveralls
