@@ -94,23 +94,40 @@ class GoogleNews:
             self.response.close()
         except Exception:
             pass
-
-    def get_news(self, deamplify=False):
-        self.url = 'https://news.google.com/?hl={}'.format(self.__lang)
+    
+    def get_news2(self, key,deamplify=False):
+        key = "+".join(key.split(" "))
+        self.url = 'https://news.google.com/search?q={}+when:{}&hl={}'.format(key,self.__period,self.__lang.lower())
+        results=''
+        self.req = urllib.request.Request(self.url, headers=self.headers)
+        self.response = urllib.request.urlopen(self.req)
+        self.page = self.response.read()
+        self.content = Soup(self.page, "html.parser")
+        articles = self.content.select('div[class="NiLAwe y6IFtc R7GTQ keNKEd j7vNaf nID9nc"]')
+        return articles
+        
+    def get_news(self, key,deamplify=False):
+        key = "+".join(key.split(" "))
+        self.url = 'https://news.google.com/search?q={}+when:{}&hl={}'.format(key,self.__period,self.__lang.lower())
+        
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
             self.response = urllib.request.urlopen(self.req)
             self.page = self.response.read()
             self.content = Soup(self.page, "html.parser")
-            self.content = self.content.find("h2").parent.parent.parent
-            result = self.content.findChildren("div", recursive=False)
-            section = None
-            for item in result:
+            results = self.content.select('div[class="NiLAwe y6IFtc R7GTQ keNKEd j7vNaf nID9nc"]')
+            # ags = soup.select('li[class="z"]')
+            print(results)
+            # self.content = self.content.find("time").parent.parent.parent.parent.parent.parent
+            # results = self.content.findChildren("div", recursive=False)
+            # print(results)
+            # section = None
+            for item in results:
                 try:
-                    try:
-                        section = item.find("h2").find("a").text
-                    except Exception as sec_e:
-                        pass
+                    # try:
+                    #     section = item.find("h2").find("a").text
+                    # except Exception as sec_e:
+                    #     pass
                     title = item.find("h3").text
                     if deamplify:
                         try:
@@ -143,8 +160,7 @@ class GoogleNews:
                         desc = 'video'
 
                     self.__results.append(
-                        {'section': section,
-                         'title': title,
+                        {'title': title,
                          'datetime': datetime,
                          'time': time,
                          'site': site,
@@ -170,7 +186,7 @@ class GoogleNews:
                 # While loop because often gnews fetch rubbish before the 'date'
                 while datetime_tmp==None:
                     datetime_tmp=dateparser.parse(string_to_parse)
-                    gnew['datetime']=datetime_tmp
+                    gnew['datetime']=datetime_tmp.replace(tzinfo=None)
                     string_to_parse=string_to_parse[1:]
             res.sort(key = lambda x:x['datetime'],reverse=True)
         return res
