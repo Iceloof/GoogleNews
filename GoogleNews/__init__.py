@@ -8,7 +8,7 @@ from dateutil.parser import parse
 
 ### METHODS
 
-def lexial_date_parser(date_to_check):
+def lexical_date_parser(date_to_check):
     if date_to_check=='':
         return ('',None)
     datetime_tmp=None
