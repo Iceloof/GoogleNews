@@ -200,8 +200,8 @@ class GoogleNews:
             print(e_parser)
             pass
 
-    def result(self):
-        return self.results()
+    def result(self,sort=False):
+        return self.results(sort)
 
     def results(self,sort=False):
         """Returns the __results.
