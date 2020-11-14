@@ -1,6 +1,10 @@
-import unittest
 
+### MODULES
+
+import unittest
 from GoogleNews import GoogleNews
+
+### TEST
 
 keyword = 'Apple'
 
@@ -72,6 +76,7 @@ class TestStringMethods(unittest.TestCase):
     self.assertIsNot('', result.get('date').lower())
     print('Result date is not empty')
 
+### MAIN
 
 if __name__ == '__main__':
   unittest.main()
