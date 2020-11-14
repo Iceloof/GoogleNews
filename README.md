@@ -8,7 +8,6 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/GoogleNews)
 ![GitHub contributors](https://img.shields.io/github/contributors/HurinHu/GoogleNews)
 ![GitHub issues](https://img.shields.io/github/issues-raw/HurinHu/GoogleNews)
-![GitHub Action](https://github.com/HurinHu/GoogleNews/workflows/GitHub%20Action/badge.svg)
 ![GitHub](https://img.shields.io/github/license/HurinHu/GoogleNews)
 
 ## Install
@@ -31,7 +30,7 @@ googlenews = GoogleNews(lang='en')
 ```
 - Optional choose period (period and custom day range should not set together)
 ```
-googlenews = GoogleNews(period='d')
+googlenews = GoogleNews(period='7d')
 ```
 - Optional choose custom day range (mm/dd/yyyy)
 ```
@@ -44,15 +43,15 @@ googlenews = GoogleNews(encode='utf-8')
 or
 ```
 googlenews.set_lang('en')
-googlenews.set_period('d')
+googlenews.set_period('7d')
 googlenews.set_time_range('02/01/2020','02/28/2020')
 googlenews.set_encode('utf-8')
 ```
-- news.google.com search sample
+- **news.google.com** search sample
 ```
 googlenews.get_news('APPLE')
 ```
-- google.com section news search sample<br/>
+- **google.com** section news search sample
 ```
 googlenews.search('APPLE')
 ```
@@ -60,7 +59,7 @@ Default return first page result. To get other page of search results:
 ```
 googlenews.getpage(2)
 ```
-- Get results<br/> will return the list, `[{'title': '...', 'media': '...', 'date': '...', 'datetime': '...', 'desc': '...', 'link': '...', 'img': '...'}]`
+- Get results will return the list, `[{'title': '...', 'media': '...', 'date': '...', 'datetime': '...', 'desc': '...', 'link': '...', 'img': '...'}]`
 ```
 googlenews.results()
 ```
@@ -78,4 +77,4 @@ googlenews.get_links()
 googlenews.clear()
 ```
 ## Issue
-- Image is not working in the latest version, it can only return default google loading gif
+Image is not working in the latest version, it can only return default google loading gif
