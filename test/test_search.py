@@ -1,6 +1,10 @@
-import unittest
 
+### MODULES
+
+import unittest
 from GoogleNews import GoogleNews
+
+### TEST
 
 keyword = 'Apple'
 
@@ -16,7 +20,7 @@ class NumbersTest(unittest.TestCase):
   def testResultNumberWithTwoPages(self):
     googlenews = GoogleNews()
     googlenews.search(keyword)
-    googlenews.getpage(2)
+    googlenews.get_page(2)
     length = len(googlenews.result())
     self.assertEqual(length, 20)
     print('Result length with two pages is correct')
@@ -72,6 +76,7 @@ class TestStringMethods(unittest.TestCase):
     self.assertIsNot('', result.get('date').lower())
     print('Result date is not empty')
 
+### MAIN
 
 if __name__ == '__main__':
   unittest.main()

@@ -1,18 +1,28 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Nov 11 19:13:35 2020
 
-@author: mario
-"""
+### MODULES
 
-import GoogleNews.__init__ as GoogleNews
+from GoogleNews import GoogleNews
 
-googlenews = GoogleNews.GoogleNews()
-googlenews.setlang('ita')
-googlenews.setTimeRange('11/02/2020','11/05/2020')
-googlenews.setencode('utf-8')
-googlenews.search('covid firenze')
-result=googlenews.result(sort=True)
+### METHODS
 
-for num,page in enumerate(result):
-    print(f"{num}. {page['date']}") # see item n. 7
+def show_routine(results):
+    for num,page in enumerate(results):
+        print(f"{num}. {page['date']} - {page['title']}")
+        
+### MAIN
+
+# Setup the research
+keywords="covid cava de' tirreni"
+period='10d'
+google_news = GoogleNews(lang='it',period=period)
+google=GoogleNews(lang='it',period=period)
+
+# Results from news.google.com
+google_news.get_news(keywords)
+results_gnews=google_news.results(sort=True)
+show_routine(results_gnews)
+
+# Results from google.com
+google.search(keywords)
+results_google=google.results(sort=True)
+show_routine(results_google)

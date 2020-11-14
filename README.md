@@ -8,7 +8,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/GoogleNews)
 ![GitHub contributors](https://img.shields.io/github/contributors/Iceloof/GoogleNews)
 ![GitHub issues](https://img.shields.io/github/issues-raw/Iceloof/GoogleNews)
-![GitHub Action](https://github.com/HurinHu/GoogleNews/workflows/GitHub%20Action/badge.svg)
+![GitHub Action](https://github.com/Iceloof/GoogleNews/workflows/GitHub%20Action/badge.svg)
 ![GitHub](https://img.shields.io/github/license/Iceloof/GoogleNews)
 
 ## Install
@@ -31,7 +31,7 @@ googlenews = GoogleNews(lang='en')
 ```
 - Optional choose period (period and custom day range should not set together)
 ```
-googlenews = GoogleNews(period='d')
+googlenews = GoogleNews(period='7d')
 ```
 - Optional choose custom day range (mm/dd/yyyy)
 ```
@@ -43,41 +43,41 @@ googlenews = GoogleNews(encode='utf-8')
 ```
 or
 ```
-googlenews.setlang('en')
-googlenews.setperiod('d')
-googlenews.setTimeRange('02/01/2020','02/28/2020')
-googlenews.setencode('utf-8')
+googlenews.set_lang('en')
+googlenews.set_period('7d')
+googlenews.set_time_range('02/01/2020','02/28/2020')
+googlenews.set_encode('utf-8')
 ```
-- Search keyword
-Default return first page result
+- **news.google.com** search sample
 ```
-googlenews.search('APPL')
+googlenews.get_news('APPLE')
 ```
-- Get other page of search results
+- **google.com** section news search sample
+```
+googlenews.search('APPLE')
+```
+
+Default return first page result. To get other page of search results:
+
 ```
 googlenews.getpage(2)
 ```
-- Get result
-It will return a list, `[{'title': '...', 'media': '...', 'date': '...', 'desc': "...", 'link': '...', 'img': '...'}]`
+- Get results will return the list, `[{'title': '...', 'media': '...', 'date': '...', 'datetime': '...', 'desc': '...', 'link': '...', 'img': '...'}]`
 ```
-googlenews.result(sort=False)
+googlenews.results()
 ```
-or just get a list of news titles
+if `googlenews.result(sort=True)` the tool will try to order the results in cronologically reversed order
+- Get texts will return the list of news titles
 ```
-googlenews.gettext()
+googlenews.get_texts()
 ```
-or just get a list of news links
+- Get links returns the list of news links
 ```
-googlenews.get__links()
+googlenews.get_links()
 ```
-- Clear result list
-Clear result list before you get another search or page
+- Clear result list before doing another search with the same object
 ```
 googlenews.clear()
 ```
-If sort=True one can order the results cronologically reversed and add the datetime parameter in the output list.
-```
-googlenews.result(sort=True)
-```
 ## Issue
-- Image is not working in the latest version, it can only return default google loading gif
+Image is not working in the latest version, it can only return default google loading gif
