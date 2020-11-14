@@ -106,7 +106,7 @@ class GoogleNews:
                     tmp_media = ''
                 try:
                     tmp_date = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').findNext('div').text
-                    tmp_date,tmp_datetime=lexial_date_parser(tmp_date)
+                    tmp_date,tmp_datetime=lexical_date_parser(tmp_date)
                 except Exception:
                     tmp_date = ''
                     tmp_datetime=None

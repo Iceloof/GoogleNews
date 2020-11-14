@@ -73,6 +73,7 @@ class TestStringMethods(unittest.TestCase):
     googlenews = GoogleNews()
     googlenews.search(keyword)
     result = googlenews.result()[0]
+    print(result.get('date').lower())
     self.assertIsNot('', result.get('date').lower())
     print('Result date is not empty')
 
