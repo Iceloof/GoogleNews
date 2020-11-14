@@ -57,11 +57,10 @@ class GoogleNews:
 
     def set_encode(self, encode):
         self.__encode = encode
-        
+
     def search(self, key):
         """
         Searches for a term in google.com in the news section and retrieves the first page into __results.
-        
         Parameters:
         key = the search term
         """
@@ -125,11 +124,13 @@ class GoogleNews:
             self.response.close()
         except Exception:
             pass
-        
-    def get_news(self, key,deamplify=False):
-        key = "+".join(key.split(" "))
-        self.url = 'https://news.google.com/search?q={}+when:{}&hl={}'.format(key,self.__period,self.__lang.lower())
-        
+
+    def get_news(self, key="",deamplify=False):
+        if key != '':
+            key = "+".join(key.split(" "))
+            self.url = 'https://news.google.com/search?q={}+when:{}&hl={}'.format(key,self.__period,self.__lang.lower())
+        else:
+            self.url = 'https://news.google.com/?hl={}'.format(self.__lang)
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
             self.response = urllib.request.urlopen(self.req)
@@ -161,7 +162,6 @@ class GoogleNews:
                     except:
                         datetime_obj=None
                     # link
-                    
                     if deamplify:
                         try:
                             link = 'news.google.com/' + article.find("h3").find("a").get("href")
@@ -199,6 +199,9 @@ class GoogleNews:
         except Exception as e_parser:
             print(e_parser)
             pass
+
+    def result(self):
+        return self.results()
 
     def results(self,sort=False):
         """Returns the __results.
