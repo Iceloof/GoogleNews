@@ -60,24 +60,20 @@ Default return first page result. To get other page of search results:
 ```
 googlenews.getpage(2)
 ```
-- Get results<br/>
-It will return the list, `[{'title': '...', 'media': '...', 'date': '...', 'datetime': '...', 'desc': '...', 'link': '...', 'img': '...'}]`
+- Get results<br/> will return the list, `[{'title': '...', 'media': '...', 'date': '...', 'datetime': '...', 'desc': '...', 'link': '...', 'img': '...'}]`
 ```
 googlenews.results()
 ```
 if `googlenews.result(sort=True)` the tool will try to order the results in cronologically reversed order
-- Get texts<br/>
-It will return the list of news titles
+- Get texts will return the list of news titles
 ```
 googlenews.get_texts()
 ```
-- Get links<br/>
-It will returns the list of news links
+- Get links returns the list of news links
 ```
 googlenews.get_links()
 ```
-- Clear result list<br/>
-Clear results list before doing another search with the same object
+- Clear result list before doing another search with the same object
 ```
 googlenews.clear()
 ```
