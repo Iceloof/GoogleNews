@@ -48,15 +48,31 @@ class GoogleNews:
     def set_lang(self, lang):
         self.__lang = lang
 
+    def setlang(self, lang):
+        """Don't remove this, will affect old version user when upgrade"""
+        self.set_lang(lang)
+
     def set_period(self, period):
         self.__period = period
+
+    def setperiod(self, period):
+        """Don't remove this, will affect old version user when upgrade"""
+        self.set_period(period)
 
     def set_time_range(self, start, end):
         self.__start = start
         self.__end = end
 
+    def setTimeRange(self, start, end):
+        """Don't remove this, will affect old version user when upgrade"""
+        self.set_time_range(start, end)
+
     def set_encode(self, encode):
         self.__encode = encode
+
+    def setencode(self, encode):
+        """Don't remove this, will affect old version user when upgrade"""
+        self.set_encode(encode)
 
     def search(self, key):
         """
@@ -124,6 +140,10 @@ class GoogleNews:
             self.response.close()
         except Exception:
             pass
+
+    def getpage(self, page=1):
+        """Don't remove this, will affect old version user when upgrade"""
+        self.get_page(page)
 
     def get_news(self, key="",deamplify=False):
         if key != '':
@@ -201,6 +221,7 @@ class GoogleNews:
             pass
 
     def result(self,sort=False):
+        """Don't remove this, will affect old version user when upgrade"""
         return self.results(sort)
 
     def results(self,sort=False):
@@ -218,6 +239,10 @@ class GoogleNews:
     def get_texts(self):
         """Returns only the __texts of the __results."""
         return self.__texts
+
+    def gettext(self):
+        """Don't remove this, will affect old version user when upgrade"""
+        return self.get_texts()
 
     def get_links(self):
         """Returns only the __links of the __results."""

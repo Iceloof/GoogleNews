@@ -66,10 +66,6 @@ googlenews.get_page(2)
 ```
 googlenews.results()
 ```
-or
-```
-googlenews.result()
-```
 if `googlenews.results(sort=True)` the tool will try to order the results in cronologically reversed order
 
 - Get texts will return the list of news titles
