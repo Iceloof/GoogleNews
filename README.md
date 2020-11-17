@@ -60,7 +60,7 @@ googlenews.search('APPLE')
 Default return first page result. To get other page of search results:
 
 ```
-googlenews.getpage(2)
+googlenews.get_page(2)
 ```
 - Get results will return the list, `[{'title': '...', 'media': '...', 'date': '...', 'datetime': '...', 'desc': '...', 'link': '...', 'img': '...'}]`
 ```
