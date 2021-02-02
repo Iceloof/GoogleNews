@@ -62,6 +62,14 @@ Default return first page result, you don't need to get first page again, otherw
 ```
 googlenews.get_page(2)
 ```
+- If you only want to get specific page
+```
+result = googlenews.page_at(2)
+```
+- If you want to get the total result number of the search(this is approximate number, not exact number, it is the number showing on the google search page)
+```
+googlenews.total_count()
+```
 - Get results will return the list, `[{'title': '...', 'media': '...', 'date': '...', 'datetime': '...', 'desc': '...', 'link': '...', 'img': '...'}]`
 ```
 googlenews.results()
