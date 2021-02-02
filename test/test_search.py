@@ -31,7 +31,22 @@ class NumbersTest(unittest.TestCase):
     length = len(googlenews.result())
     self.assertNotEqual(length, 0)
     print('Encoding result is not empty')
-    
+
+  def testTotalCountGreaterThanZero(self):
+    googlenews = GoogleNews()
+    googlenews.search(keyword)
+    count = googlenews.total_count()
+    self.assertGreater(count, 0)
+    print('Total count is greater than zero')
+
+  def testResultNumberAtTwoPages(self):
+    googlenews = GoogleNews()
+    googlenews.search(keyword)
+    result = googlenews.page_at(2)
+    length = len(result)
+    self.assertEqual(length, 10)
+    print('Result length at two pages is correct')
+
 class TestStringMethods(unittest.TestCase):
 
   def testResultContainsKeyword(self):
