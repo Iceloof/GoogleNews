@@ -1,6 +1,6 @@
 
 ### MODULES
-
+import re
 import urllib.request
 import dateparser, copy
 from bs4 import BeautifulSoup as Soup, ResultSet
@@ -93,12 +93,8 @@ class GoogleNews:
         self.content = Soup(self.page, "html.parser")
         stats = self.content.find_all("div", id="result-stats")
         if stats and isinstance(stats, ResultSet):
-            stats = stats[0].text
-            if stats.find('results') != -1:
-                self.__totalcount = int(stats[stats.find('bout') + 5:stats.find('results') - 1].replace(',', ''))
-            else:
-                # if results isnt found means 1 result was found
-                self.__totalcount = int(stats[0])
+            stats = re.search(r'\d+', stats[0].text)
+            self.__totalcount = int(stats.group())
         else:
             #TODO might want to add output for user to know no data was found
             return
