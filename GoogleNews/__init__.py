@@ -87,7 +87,7 @@ class GoogleNews:
         self.get_page()
 
     def build_response(self):
-        self.req = urllib.request.Request(self.url, headers=self.headers)
+        self.req = urllib.request.Request(self.url.replace("search?", "search?hl=en&gl=en&"), headers=self.headers)
         self.response = urllib.request.urlopen(self.req)
         self.page = self.response.read()
         self.content = Soup(self.page, "html.parser")
@@ -220,7 +220,7 @@ class GoogleNews:
         else:
             self.url = 'https://news.google.com/?hl={}'.format(self.__lang)
         try:
-            self.req = urllib.request.Request(self.url, headers=self.headers)
+            self.req = urllib.request.Request(self.url.replace("search?", "search?hl=en&gl=en&"), headers=self.headers)
             self.response = urllib.request.urlopen(self.req)
             self.page = self.response.read()
             self.content = Soup(self.page, "html.parser")
