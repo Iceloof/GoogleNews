@@ -1,9 +1,9 @@
 
 ### MODULES
-
+import re
 import urllib.request
 import dateparser, copy
-from bs4 import BeautifulSoup as Soup
+from bs4 import BeautifulSoup as Soup, ResultSet
 from dateutil.parser import parse
 
 ### METHODS
@@ -86,6 +86,21 @@ class GoogleNews:
             self.__key = urllib.request.quote(self.__key.encode(self.__encode))
         self.get_page()
 
+    def build_response(self):
+        self.req = urllib.request.Request(self.url, headers=self.headers)
+        self.response = urllib.request.urlopen(self.req)
+        self.page = self.response.read()
+        self.content = Soup(self.page, "html.parser")
+        stats = self.content.find_all("div", id="result-stats")
+        if stats and isinstance(stats, ResultSet):
+            stats = re.search(r'\d+', stats[0].text)
+            self.__totalcount = int(stats.group())
+        else:
+            #TODO might want to add output for user to know no data was found
+            return
+        result = self.content.find_all("div", id="search")[0].find_all("g-card")
+        return result
+
     def page_at(self, page=1):
         """
         Retrieves a specific page from google.com in the news sections into __results.
@@ -104,13 +119,7 @@ class GoogleNews:
         except AttributeError:
             raise AttributeError("You need to run a search() before using get_page().")
         try:
-            self.req = urllib.request.Request(self.url, headers=self.headers)
-            self.response = urllib.request.urlopen(self.req)
-            self.page = self.response.read()
-            self.content = Soup(self.page, "html.parser")
-            stats = self.content.find_all("div", id="result-stats")[0].text
-            self.__totalcount = int(stats[stats.find('bout')+5:stats.find('results')-1].replace(',', ''))
-            result = self.content.find_all("div", id="search")[0].find_all("g-card")
+            result = self.build_response()
             for item in result:
                 try:
                     tmp_text = item.find("div", {"role" : "heading"}).text.replace("\n","")
@@ -164,13 +173,7 @@ class GoogleNews:
         except AttributeError:
             raise AttributeError("You need to run a search() before using get_page().")
         try:
-            self.req = urllib.request.Request(self.url, headers=self.headers)
-            self.response = urllib.request.urlopen(self.req)
-            self.page = self.response.read()
-            self.content = Soup(self.page, "html.parser")
-            stats = self.content.find_all("div", id="result-stats")[0].text
-            self.__totalcount = int(stats[stats.find('bout')+5:stats.find('results')-1].replace(',', ''))
-            result = self.content.find_all("div", id="search")[0].find_all("g-card")
+            result = self.build_response()
             for item in result:
                 try:
                     tmp_text = item.find("div", {"role" : "heading"}).text.replace("\n","")
