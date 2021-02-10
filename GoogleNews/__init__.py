@@ -6,6 +6,9 @@ import dateparser, copy
 from bs4 import BeautifulSoup as Soup, ResultSet
 from dateutil.parser import parse
 
+import datetime
+from dateutil.relativedelta import relativedelta
+
 ### METHODS
 
 def lexical_date_parser(date_to_check):
@@ -28,6 +31,29 @@ def lexical_date_parser(date_to_check):
     if date_tmp[0]==' ':
         date_tmp=date_tmp[1:]
     return date_tmp,datetime_tmp
+
+
+def define_date(date):
+    months = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
+    try:
+        if ' ago' in date.lower():
+            q = int(date.split()[-3])
+            if 'hour' in date.lower():
+                return datetime.datetime.now() + relativedelta(hours=-q)
+            elif 'day' in date.lower():
+                return datetime.datetime.now() + relativedelta(days=-q)
+            elif 'week' in date.lower():
+                return datetime.datetime.now() + relativedelta(days=-7*q)
+            elif 'month' in date.lower():
+                return datetime.datetime.now() + relativedelta(months=-q)
+        else:
+            for month in months.keys():
+                if month.lower()+' ' in date.lower():
+                    date_list = date.replace(',','').split()[-3:]
+                    return datetime.datetime(day=int(date_list[1]), month=months[month], year=int(date_list[2]))
+    except:
+        return float(np.nan)
+
 
 ### CLASSEs
 
@@ -87,7 +113,7 @@ class GoogleNews:
         self.get_page()
 
     def build_response(self):
-        self.req = urllib.request.Request(self.url, headers=self.headers)
+        self.req = urllib.request.Request(self.url.replace("search?","search?hl=en&gl=en&"), headers=self.headers)
         self.response = urllib.request.urlopen(self.req)
         self.page = self.response.read()
         self.content = Soup(self.page, "html.parser")
@@ -149,7 +175,7 @@ class GoogleNews:
                     tmp_img = ''
                 self.__texts.append(tmp_text)
                 self.__links.append(tmp_link)
-                results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'datetime':tmp_datetime,'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
+                results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'datetime':define_date(tmp_date),'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
             self.response.close()
         except Exception as e_parser:
             print(e_parser)
@@ -203,7 +229,7 @@ class GoogleNews:
                     tmp_img = ''
                 self.__texts.append(tmp_text)
                 self.__links.append(tmp_link)
-                self.__results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'datetime':tmp_datetime,'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
+                self.__results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'datetime':define_date(tmp_date),'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
             self.response.close()
         except Exception as e_parser:
             print(e_parser)
@@ -276,7 +302,7 @@ class GoogleNews:
                     self.__results.append({'title':title,
                                            'desc':desc,
                                            'date':date,
-                                           'datetime':datetime_obj,
+                                           'datetime':define_date(date),
                                            'link':link,
                                            'img':img,
                                            'media':None,
