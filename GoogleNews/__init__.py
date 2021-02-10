@@ -301,7 +301,7 @@ class GoogleNews:
                     # collection
                     self.__results.append({'title':title,
                                            'desc':desc,
-                                           'date':define_date(tmp_date),
+                                           'date':define_date(date),
                                            'datetime':datetime_obj,
                                            'link':link,
                                            'img':img,
