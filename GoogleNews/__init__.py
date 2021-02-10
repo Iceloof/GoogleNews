@@ -175,7 +175,7 @@ class GoogleNews:
                     tmp_img = ''
                 self.__texts.append(tmp_text)
                 self.__links.append(tmp_link)
-                results.append({'title': tmp_text, 'media': tmp_media,'date': define_date(tmp_date),'datetime':tmp_datetime,'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
+                results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'datetime':define_date(tmp_date),'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
             self.response.close()
         except Exception as e_parser:
             print(e_parser)
@@ -229,7 +229,7 @@ class GoogleNews:
                     tmp_img = ''
                 self.__texts.append(tmp_text)
                 self.__links.append(tmp_link)
-                self.__results.append({'title': tmp_text, 'media': tmp_media,'date': define_date(tmp_date),'datetime':tmp_datetime,'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
+                self.__results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'datetime':define_date(tmp_date),'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
             self.response.close()
         except Exception as e_parser:
             print(e_parser)
@@ -301,8 +301,8 @@ class GoogleNews:
                     # collection
                     self.__results.append({'title':title,
                                            'desc':desc,
-                                           'date':define_date(date),
-                                           'datetime':datetime_obj,
+                                           'date':date,
+                                           'datetime':define_date(date),
                                            'link':link,
                                            'img':img,
                                            'media':None,
