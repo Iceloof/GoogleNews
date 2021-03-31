@@ -242,6 +242,8 @@ class GoogleNews:
     def get_news(self, key="",deamplify=False):
         if key != '':
             key = "+".join(key.split(" "))
+            if self.__encode != "":
+                key = urllib.request.quote(key.encode(self.__encode))
             self.url = 'https://news.google.com/search?q={}+when:{}&hl={}'.format(key,self.__period,self.__lang.lower())
         else:
             self.url = 'https://news.google.com/?hl={}'.format(self.__lang)
