@@ -22,7 +22,7 @@ def lexical_date_parser(date_to_check):
         if datetime_tmp==None:
             date_tmp=date_tmp[1:]
         count+=1
-        
+
     if datetime_tmp==None:
         date_tmp=date_to_check
     else:
@@ -52,7 +52,7 @@ def define_date(date):
                     date_list = date.replace(',','').split()[-3:]
                     return datetime.datetime(day=int(date_list[1]), month=months[month], year=int(date_list[2]))
     except:
-        return float(np.nan)
+        return float('nan')
 
 
 ### CLASSEs
