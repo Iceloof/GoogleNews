@@ -119,7 +119,7 @@ class GoogleNews:
         self.content = Soup(self.page, "html.parser")
         stats = self.content.find_all("div", id="result-stats")
         if stats and isinstance(stats, ResultSet):
-            stats = re.search(r'\d+', stats[0].text)
+            stats = re.search(r'[\d,]+', stats[0].text)
             self.__totalcount = int(stats.group())
         else:
             #TODO might want to add output for user to know no data was found
