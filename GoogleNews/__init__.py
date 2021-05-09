@@ -120,7 +120,7 @@ class GoogleNews:
         stats = self.content.find_all("div", id="result-stats")
         if stats and isinstance(stats, ResultSet):
             stats = re.search(r'[\d,]+', stats[0].text)
-            self.__totalcount = int(stats.group())
+            self.__totalcount = int(stats.group().replace(',', ''))
         else:
             #TODO might want to add output for user to know no data was found
             return
