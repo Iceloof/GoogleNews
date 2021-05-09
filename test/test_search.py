@@ -53,6 +53,7 @@ class TestStringMethods(unittest.TestCase):
     googlenews = GoogleNews()
     googlenews.search(keyword)
     result = googlenews.result()[0]
+    print(result.get('desc').lower())
     self.assertIn(keyword.lower(), result.get('desc').lower())
     print('Result contains keyword')
 
@@ -60,6 +61,7 @@ class TestStringMethods(unittest.TestCase):
     googlenews = GoogleNews()
     googlenews.search(keyword)
     result = googlenews.result()[0]
+    print(result.get('link').lower())
     self.assertIn('http', result.get('link').lower())
     print('Result contains http link')
 
@@ -67,6 +69,7 @@ class TestStringMethods(unittest.TestCase):
     googlenews = GoogleNews()
     googlenews.search(keyword)
     result = googlenews.result()[0]
+    print(result.get('img').lower())
     self.assertIn('base64', result.get('img').lower())
     print('Result contains image')
 
@@ -74,6 +77,7 @@ class TestStringMethods(unittest.TestCase):
     googlenews = GoogleNews()
     googlenews.search(keyword)
     result = googlenews.result()[0]
+    print(result.get('title').lower())
     self.assertIsNot('', result.get('title').lower())
     print('Result title is not empty')
 
@@ -81,6 +85,7 @@ class TestStringMethods(unittest.TestCase):
     googlenews = GoogleNews()
     googlenews.search(keyword)
     result = googlenews.result()[0]
+    print(result.get('media').lower())
     self.assertIsNot('', result.get('media').lower())
     print('Result media is not empty')
 
