@@ -25,9 +25,13 @@ pip install --upgrade GoogleNews
 from GoogleNews import GoogleNews
 googlenews = GoogleNews()
 ```
-- Optional choose language
+- Optional choose language and region, you can use lanaguage only, default language will be 'en'
 ```
 googlenews = GoogleNews(lang='en')
+```
+or
+```
+googlenews = GoogleNews(lang='en', region='US')
 ```
 - Optional choose period (period and custom day range should not set together)
 ```
