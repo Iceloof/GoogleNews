@@ -59,15 +59,19 @@ def define_date(date):
 
 class GoogleNews:
 
-    def __init__(self,lang="en",period="",start="",end="",encode="utf-8",accept_language='nl-NL,nl;q=0.9'):
+    def __init__(self,lang="en",region=None ,period="",start="",end="",encode="utf-8"):
         self.__texts = []
         self.__links = []
         self.__results = []
         self.__totalcount = 0
         self.user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0'
-        self.accept_language = accept_language 
-        self.headers = {'User-Agent': self.user_agent, "Accept-Language":self.accept_language}
         self.__lang = lang # todo: unify this accept language and country search
+        if region:
+            self.__region = region
+            self.accept_language=f"{lang}-{region},{lang};q=0.9"
+            self.headers = {'User-Agent': self.user_agent, "Accept-Language":self.accept_language}
+        else:
+            self.headers = {'User-Agent': self.user_agent}
         self.__period = period
         self.__start = start
         self.__end = end
