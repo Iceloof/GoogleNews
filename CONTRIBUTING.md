@@ -1,0 +1,1 @@
+ Hello there. your software is very good, but you have a shortcoming, sometimes the ip address is blocked because of vpn and proxy use, but when I go to googlenews.com with vpn, I don't get such an error.this aspect of your software should be improved
