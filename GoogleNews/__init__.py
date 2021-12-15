@@ -16,12 +16,12 @@ def lexical_date_parser(date_to_check):
         return ('',None)
     datetime_tmp=None
     date_tmp=copy.copy(date_to_check)
-    count=0
-    while datetime_tmp==None and count <= (len(date_to_check)-3):
+    try:
+        date_tmp = date_tmp[date_tmp.rfind('....')+4:]
         datetime_tmp=dateparser.parse(date_tmp)
-        if datetime_tmp==None:
-            date_tmp=date_tmp[1:]
-        count+=1
+    except:
+        date_tmp = None
+        datetime_tmp = None
 
     if datetime_tmp==None:
         date_tmp=date_to_check
@@ -75,7 +75,11 @@ class GoogleNews:
         self.__start = start
         self.__end = end
         self.__encode = encode
+        self.__version = '1.6.0'
 
+    def getVersion(self):
+        return self.__version
+    
     def set_lang(self, lang):
         self.__lang = lang
 
@@ -164,13 +168,13 @@ class GoogleNews:
                 except Exception:
                     tmp_media = ''
                 try:
-                    tmp_date = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').findNext('div').text
+                    tmp_date = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').text
                     tmp_date,tmp_datetime=lexical_date_parser(tmp_date)
                 except Exception:
                     tmp_date = ''
                     tmp_datetime=None
                 try:
-                    tmp_desc = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').text.replace("\n","")
+                    tmp_desc = item.find("div", {"role" : "heading"}).next_sibling.text
                 except Exception:
                     tmp_desc = ''
                 try:
