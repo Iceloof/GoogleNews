@@ -33,6 +33,10 @@ print(googlenews.getVersion())
 ```
 googlenews = GoogleNews(lang='en')
 ```
+or
+```
+googlenews = GoogleNews(lang='en', region='US')
+```
 - Optional choose period (period and custom day range should not set together)
 ```
 googlenews = GoogleNews(period='7d')
