@@ -16,12 +16,12 @@ def lexical_date_parser(date_to_check):
         return ('',None)
     datetime_tmp=None
     date_tmp=copy.copy(date_to_check)
-    count=0
-    while datetime_tmp==None and count <= (len(date_to_check)-3):
+    try:
+        date_tmp = date_tmp[date_tmp.rfind('....')+4:]
         datetime_tmp=dateparser.parse(date_tmp)
-        if datetime_tmp==None:
-            date_tmp=date_tmp[1:]
-        count+=1
+    except:
+        date_tmp = None
+        datetime_tmp = None
 
     if datetime_tmp==None:
         date_tmp=date_to_check
@@ -59,19 +59,27 @@ def define_date(date):
 
 class GoogleNews:
 
-    def __init__(self,lang="en",period="",start="",end="",encode="utf-8"):
+    def __init__(self,lang="en",period="",start="",end="",encode="utf-8",region=None):
         self.__texts = []
         self.__links = []
         self.__results = []
         self.__totalcount = 0
         self.user_agent = 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:64.0) Gecko/20100101 Firefox/64.0'
-        self.headers = {'User-Agent': self.user_agent}
         self.__lang = lang
+        if region:
+            self.accept_language= lang + '-' + region + ',' + lang + ';q=0.9'
+            self.headers = {'User-Agent': self.user_agent, 'Accept-Language': self.accept_language}
+        else:
+            self.headers = {'User-Agent': self.user_agent}
         self.__period = period
         self.__start = start
         self.__end = end
         self.__encode = encode
+        self.__version = '1.6.0'
 
+    def getVersion(self):
+        return self.__version
+    
     def set_lang(self, lang):
         self.__lang = lang
 
@@ -119,8 +127,8 @@ class GoogleNews:
         self.content = Soup(self.page, "html.parser")
         stats = self.content.find_all("div", id="result-stats")
         if stats and isinstance(stats, ResultSet):
-            stats = re.search(r'\d+', stats[0].text)
-            self.__totalcount = int(stats.group())
+            stats = re.search(r'[\d,]+', stats[0].text)
+            self.__totalcount = int(stats.group().replace(',', ''))
         else:
             #TODO might want to add output for user to know no data was found
             return
