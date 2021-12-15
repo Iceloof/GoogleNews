@@ -1,6 +1,6 @@
 # GoogleNews
 
-[![Build Status](https://travis-ci.com/Iceloof/GoogleNews.svg)](https://travis-ci.com/Iceloof/GoogleNews)
+[![Build Status](https://app.travis-ci.com/Iceloof/GoogleNews.svg)](https://app.travis-ci.com/github/Iceloof/GoogleNews)
 [![Coverage Status](https://coveralls.io/repos/github/Iceloof/GoogleNews/badge.svg)](https://coveralls.io/github/Iceloof/GoogleNews)
 [![PyPI](https://img.shields.io/pypi/v/GoogleNews)](https://pypi.org/project/GoogleNews/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/GoogleNews)](https://pypistats.org/packages/googlenews)
@@ -24,6 +24,10 @@ pip install --upgrade GoogleNews
 ```
 from GoogleNews import GoogleNews
 googlenews = GoogleNews()
+```
+- Check version
+```
+print(googlenews.getVersion())
 ```
 - Optional choose language
 ```
