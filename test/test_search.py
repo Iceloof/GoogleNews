@@ -49,12 +49,18 @@ class NumbersTest(unittest.TestCase):
 
 class TestStringMethods(unittest.TestCase):
 
+  def testVersion(self):
+    googlenews = GoogleNews()
+    version = '1.6.0'
+    self.assertIn(version, googlenews.getVersion())
+    print('Latest version matched')
+    
   def testResultContainsKeyword(self):
     googlenews = GoogleNews()
     googlenews.search(keyword)
     result = googlenews.result()[0]
-    print(result.get('desc').lower())
-    self.assertIn(keyword.lower(), result.get('desc').lower())
+    print(result.get('title').lower()+result.get('desc').lower())
+    self.assertIn(keyword.lower(), result.get('title').lower()+result.get('desc').lower())
     print('Result contains keyword')
 
   def testResultHasLink(self):

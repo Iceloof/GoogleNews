@@ -17,7 +17,7 @@ def lexical_date_parser(date_to_check):
     datetime_tmp=None
     date_tmp=copy.copy(date_to_check)
     try:
-        date_tmp = date_tmp[date_tmp.rfind('....')+4:]
+        date_tmp = date_tmp[date_tmp.rfind('..')+2:]
         datetime_tmp=dateparser.parse(date_tmp)
     except:
         date_tmp = None
@@ -222,13 +222,13 @@ class GoogleNews:
                 except Exception:
                     tmp_media = ''
                 try:
-                    tmp_date = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').findNext('div').text
+                    tmp_date = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').text
                     tmp_date,tmp_datetime=lexical_date_parser(tmp_date)
                 except Exception:
                     tmp_date = ''
                     tmp_datetime=None
                 try:
-                    tmp_desc = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').text.replace("\n","")
+                    tmp_desc = item.find("div", {"role" : "heading"}).next_sibling.text
                 except Exception:
                     tmp_desc = ''
                 try:
