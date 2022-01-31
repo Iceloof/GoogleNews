@@ -3,6 +3,7 @@
 import re
 import urllib.request
 import dateparser, copy
+import requests
 from bs4 import BeautifulSoup as Soup, ResultSet
 from dateutil.parser import parse
 
@@ -288,12 +289,16 @@ class GoogleNews:
                     # link
                     if deamplify:
                         try:
-                            link = 'news.google.com/' + article.find("h3").find("a").get("href")
+                            link = 'https://news.google.com/' + article.find("h3").find("a").get("href")
+                            r = requests.head(link, allow_redirects=True)
+                            link = r.url
                         except Exception as deamp_e:
                             print(deamp_e)
                             link = article.find("article").get("jslog").split('2:')[1].split(';')[0]
                     else:
-                            link = 'news.google.com/' + article.find("h3").find("a").get("href")
+                            link = 'https://news.google.com/' + article.find("h3").find("a").get("href")
+                            r = requests.head(link, allow_redirects=True)
+                            link = r.url
                     self.__texts.append(title)
                     self.__links.append(link)
                     if link.startswith('https://www.youtube.com/watch?v='):
