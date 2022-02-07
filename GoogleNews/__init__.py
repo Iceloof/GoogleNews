@@ -7,7 +7,9 @@ import dateparser, copy
 from bs4 import BeautifulSoup as Soup, ResultSet
 from dateutil.parser import parse
 from selenium import webdriver
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -16,8 +18,19 @@ from dateutil.relativedelta import relativedelta
 
 ### METHODS
 
-def document_initialised(driver):
-    return driver.execute_script("return initialised")
+class page_ready(object):
+
+  def __call__(self, driver : WebDriver):
+    element = driver.find_element(By.ID, "result-stats")
+    #Make sure id -> result-stats is present and no g-img have loading gif -> data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+    if element:
+        images = driver.find_elements(By.CSS_SELECTOR, "g-img")
+        for image in images:
+            img = image.find_element(By.CSS_SELECTOR, "img")
+            if img.get_attribute('src') == 'data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==':
+                return False
+        return element
+    return False
 
 def lexical_date_parser(date_to_check):
     if date_to_check=='':
@@ -83,12 +96,12 @@ class GoogleNews:
         Encoding of the news to be retrieved
     region: str
         Region of the news to be retrieved
-    wait_till_load: bool (optional)
-        Boolean indicating whether to wait until the the page is fully loaded before returning html
-    timeout: int (optional) default 10 seconds
-        Timeout for the request to be made before returning html even if the page is not fully loaded        
+    wait_for_images: bool (optional)
+        Boolean indicating whether to wait until the the page has loaded the images before returning html
+    timeout: int (optional) default 5 seconds
+        Timeout for the request to be made before returning html even if the images are not loaded       
     '''
-    def __init__(self,lang="en",period="",start="",end="",encode="utf-8",region=None, wait_till_load=False, timeout=10):
+    def __init__(self,lang="en",period="",start="",end="",encode="utf-8",region=None, wait_for_images=False, timeout=5):
         self.__texts = []
         self.__links = []
         self.__results = []
@@ -105,7 +118,7 @@ class GoogleNews:
         self.__end = end
         self.__encode = encode
         self.__version = '1.6.0'
-        self.__wait_till_load = wait_till_load
+        self.__wait_for_images = wait_for_images
         self.__timeout = timeout
 
     def getVersion(self):
@@ -150,19 +163,26 @@ class GoogleNews:
         if self.__encode != "":
             self.__key = urllib.request.quote(self.__key.encode(self.__encode))
         self.get_page()
-
-    def build_response(self):
+    
+    def send_request(self):
         options = Options()
         options.headless = True
         driver = webdriver.Chrome(ChromeDriverManager(log_level=0).install(), options=options)
         driver.get(self.url.replace("search?","search?hl=en&gl=en&"))
-        if self.__wait_till_load:
+        if self.__wait_for_images:
+            driver.fullscreen_window()
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);") #Scroll to the bottom to force images to load properly
             try:
-                WebDriverWait(driver, timeout=self.__timeout).until(document_initialised)
-            except:
-                driver.close
-                raise Exception("Timeout waiting for page to load")             
-        self.page = driver.page_source
+                WebDriverWait(driver, timeout=self.__timeout).until(page_ready())
+            except Exception as e:
+                pass
+                # driver.close()
+                # raise Exception("Timeout waiting for page to load")  
+        self.page = driver.find_element(By.CSS_SELECTOR, "body").get_attribute('innerHTML')
+        driver.close()
+
+    def build_response(self):  
+        self.send_request()      
         self.content = Soup(self.page, "html.parser")
         stats = self.content.find_all("div", id="result-stats")
         if stats and isinstance(stats, ResultSet):
@@ -170,9 +190,8 @@ class GoogleNews:
             self.__totalcount = int(stats.group().replace(',', ''))
         else:
             #TODO might want to add output for user to know no data was found
-            return
+            return []
         result = self.content.find_all("div", id="search")[0].find_all("g-card")
-        driver.close()
         return result
 
     def page_at(self, page=1):
@@ -294,17 +313,7 @@ class GoogleNews:
         else:
             self.url = 'https://news.google.com/?hl={}'.format(self.__lang)
         try:
-            options = Options()
-            options.headless = True
-            driver = webdriver.Chrome(ChromeDriverManager(log_level=0).install(), options=options)
-            driver.get(self.url.replace("search?","search?hl=en&gl=en&"))
-            if self.__wait_till_load:
-                try:
-                    WebDriverWait(driver, timeout=self.__timeout).until(document_initialised)
-                except:
-                    driver.close
-                    raise Exception("Timeout waiting for page to load")  
-            self.page = driver.page_source
+            self.send_request()
             self.content = Soup(self.page, "html.parser")
             articles = self.content.select('div[class="NiLAwe y6IFtc R7GTQ keNKEd j7vNaf nID9nc"]')
             for article in articles:
