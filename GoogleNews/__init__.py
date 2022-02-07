@@ -1,18 +1,23 @@
 
 ### MODULES
 import re
+from time import time
 import urllib.request
 import dateparser, copy
 from bs4 import BeautifulSoup as Soup, ResultSet
 from dateutil.parser import parse
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 
 import datetime
 from dateutil.relativedelta import relativedelta
 
 ### METHODS
+
+def document_initialised(driver):
+    return driver.execute_script("return initialised")
 
 def lexical_date_parser(date_to_check):
     if date_to_check=='':
@@ -62,7 +67,28 @@ def define_date(date):
 
 class GoogleNews:
 
-    def __init__(self,lang="en",period="",start="",end="",encode="utf-8",region=None):
+    '''
+    This class is used to get news from Google.com and News.Google.com
+    
+    Attributes:
+    lang: str
+        Language code for the news content
+    period: str
+        Time period of the news to be retrieved
+    start: str
+        Start date of the news to be retrieved
+    end: str
+        End date of the news to be retrieved
+    encode: str
+        Encoding of the news to be retrieved
+    region: str
+        Region of the news to be retrieved
+    wait_till_load: bool (optional)
+        Boolean indicating whether to wait until the the page is fully loaded before returning html
+    timeout: int (optional)
+        Timeout for the request to be made before returning html even if the page is not fully loaded        
+    '''
+    def __init__(self,lang="en",period="",start="",end="",encode="utf-8",region=None, wait_till_load=False, timeout=None):
         self.__texts = []
         self.__links = []
         self.__results = []
@@ -79,6 +105,8 @@ class GoogleNews:
         self.__end = end
         self.__encode = encode
         self.__version = '1.6.0'
+        self.__wait_till_load = wait_till_load
+        self.__timeout = timeout
 
     def getVersion(self):
         return self.__version
@@ -128,6 +156,11 @@ class GoogleNews:
         options.headless = True
         driver = webdriver.Chrome(ChromeDriverManager(log_level=0).install(), options=options)
         driver.get(self.url.replace("search?","search?hl=en&gl=en&"))
+        if self.__wait_till_load:
+            if self.__timeout:
+                WebDriverWait(driver, timeout=self.__timeout).until(document_initialised)
+            else:
+                WebDriverWait(driver).until(document_initialised)
         self.page = driver.page_source
         self.content = Soup(self.page, "html.parser")
         stats = self.content.find_all("div", id="result-stats")
@@ -264,6 +297,11 @@ class GoogleNews:
             options.headless = True
             driver = webdriver.Chrome(ChromeDriverManager(log_level=0).install(), options=options)
             driver.get(self.url.replace("search?","search?hl=en&gl=en&"))
+            if self.__wait_till_load:
+                if self.__timeout:
+                    WebDriverWait(driver, timeout=self.__timeout).until(document_initialised)
+            else:
+                WebDriverWait(driver).until(document_initialised)
             self.page = driver.page_source
             self.content = Soup(self.page, "html.parser")
             articles = self.content.select('div[class="NiLAwe y6IFtc R7GTQ keNKEd j7vNaf nID9nc"]')
