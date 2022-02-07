@@ -85,10 +85,10 @@ class GoogleNews:
         Region of the news to be retrieved
     wait_till_load: bool (optional)
         Boolean indicating whether to wait until the the page is fully loaded before returning html
-    timeout: int (optional)
+    timeout: int (optional) default 10 seconds
         Timeout for the request to be made before returning html even if the page is not fully loaded        
     '''
-    def __init__(self,lang="en",period="",start="",end="",encode="utf-8",region=None, wait_till_load=False, timeout=None):
+    def __init__(self,lang="en",period="",start="",end="",encode="utf-8",region=None, wait_till_load=False, timeout=10):
         self.__texts = []
         self.__links = []
         self.__results = []
@@ -157,10 +157,11 @@ class GoogleNews:
         driver = webdriver.Chrome(ChromeDriverManager(log_level=0).install(), options=options)
         driver.get(self.url.replace("search?","search?hl=en&gl=en&"))
         if self.__wait_till_load:
-            if self.__timeout:
+            try:
                 WebDriverWait(driver, timeout=self.__timeout).until(document_initialised)
-            else:
-                WebDriverWait(driver).until(document_initialised)
+            except:
+                driver.close
+                raise Exception("Timeout waiting for page to load")             
         self.page = driver.page_source
         self.content = Soup(self.page, "html.parser")
         stats = self.content.find_all("div", id="result-stats")
@@ -298,10 +299,11 @@ class GoogleNews:
             driver = webdriver.Chrome(ChromeDriverManager(log_level=0).install(), options=options)
             driver.get(self.url.replace("search?","search?hl=en&gl=en&"))
             if self.__wait_till_load:
-                if self.__timeout:
+                try:
                     WebDriverWait(driver, timeout=self.__timeout).until(document_initialised)
-            else:
-                WebDriverWait(driver).until(document_initialised)
+                except:
+                    driver.close
+                    raise Exception("Timeout waiting for page to load")  
             self.page = driver.page_source
             self.content = Soup(self.page, "html.parser")
             articles = self.content.select('div[class="NiLAwe y6IFtc R7GTQ keNKEd j7vNaf nID9nc"]')
