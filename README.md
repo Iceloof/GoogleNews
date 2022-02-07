@@ -39,8 +39,15 @@ googlenews = GoogleNews(lang='en', region='US')
 ```
 - Optional choose period (period and custom day range should not set together)
 ```
-googlenews = GoogleNews(period='7d')
+googlenews = GoogleNews(period='d')
 ```
+Options:
+- h : last hour
+- d : last day
+- w : last week
+- m : last month
+- y : last year
+----------------------------------------------------------------
 - Optional choose custom day range (mm/dd/yyyy)
 ```
 googlenews = GoogleNews(start='02/01/2020',end='02/28/2020')
@@ -52,7 +59,7 @@ googlenews = GoogleNews(encode='utf-8')
 or
 ```
 googlenews.set_lang('en')
-googlenews.set_period('7d')
+googlenews.set_period('d')
 googlenews.set_time_range('02/01/2020','02/28/2020')
 googlenews.set_encode('utf-8')
 ```
