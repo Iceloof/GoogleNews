@@ -1,5 +1,6 @@
 
 ### MODULES
+import os
 import re
 import urllib.request
 import dateparser, copy
@@ -13,6 +14,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 ### METHODS
+os.environ['WDM_LOG_LEVEL'] = '0'
 
 def lexical_date_parser(date_to_check):
     if date_to_check=='':
