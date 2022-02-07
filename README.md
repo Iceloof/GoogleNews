@@ -104,8 +104,6 @@ googlenews.get_links()
 googlenews.clear()
 ```
 ## Issue
-Image is not working in the latest version, it can only return default google loading gif
-
 The date range is not always working as Google may return the result with random order or out of date range.
 
 Google may recognize the program as automated robots and block the IP, using cloud server and fetching data with high frequency will get higher chance to be blocked. 
