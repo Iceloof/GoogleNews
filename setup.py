@@ -17,7 +17,7 @@ setuptools.setup(
         "beautifulsoup4",
         "dateparser",
         "python-dateutil",
-        "selenium==4.1.0",
+        "selenium>=4",
         "webdriver-manager==3.5.2",
     ],
     classifiers=[

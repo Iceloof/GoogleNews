@@ -7,7 +7,7 @@ install:
   - pip install beautifulsoup4
   - pip install coverage
   - pip install coveralls
-  - pip install selenium==4.1.0
+  - pip install selenium>=4
   - pip install webdriver-manager==3.5.2
 # command to run tests
 script:
