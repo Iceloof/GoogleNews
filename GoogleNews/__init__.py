@@ -1,6 +1,5 @@
 
 ### MODULES
-import os
 import re
 import urllib.request
 import dateparser, copy
@@ -14,7 +13,6 @@ import datetime
 from dateutil.relativedelta import relativedelta
 
 ### METHODS
-os.environ['WDM_LOG_LEVEL'] = '0'
 
 def lexical_date_parser(date_to_check):
     if date_to_check=='':
@@ -128,7 +126,7 @@ class GoogleNews:
     def build_response(self):
         options = Options()
         options.headless = True
-        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+        driver = webdriver.Chrome(ChromeDriverManager(log_level=0).install(), options=options)
         driver.get(self.url.replace("search?","search?hl=en&gl=en&"))
         self.page = driver.page_source
         self.content = Soup(self.page, "html.parser")
@@ -264,7 +262,7 @@ class GoogleNews:
         try:
             options = Options()
             options.headless = True
-            driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+            driver = webdriver.Chrome(ChromeDriverManager(log_level=0).install(), options=options)
             driver.get(self.url.replace("search?","search?hl=en&gl=en&"))
             self.page = driver.page_source
             self.content = Soup(self.page, "html.parser")
