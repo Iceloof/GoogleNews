@@ -6,7 +6,6 @@ import dateparser, copy
 from bs4 import BeautifulSoup as Soup, ResultSet
 from dateutil.parser import parse
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
@@ -125,10 +124,9 @@ class GoogleNews:
         self.get_page()
 
     def build_response(self):
-        service = ChromeService(executable_path=ChromeDriverManager().install())
         options = Options()
         options.headless = True
-        driver = webdriver.Chrome(service=service, options=options)
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
         driver.get(self.url.replace("search?","search?hl=en&gl=en&"))
         self.page = driver.page_source
         self.content = Soup(self.page, "html.parser")
@@ -262,10 +260,9 @@ class GoogleNews:
         else:
             self.url = 'https://news.google.com/?hl={}'.format(self.__lang)
         try:
-            service = ChromeService(executable_path=ChromeDriverManager().install())
             options = Options()
             options.headless = True
-            driver = webdriver.Chrome(service=service, options=options)
+            driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
             driver.get(self.url.replace("search?","search?hl=en&gl=en&"))
             self.page = driver.page_source
             self.content = Soup(self.page, "html.parser")
