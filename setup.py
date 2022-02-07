@@ -13,7 +13,13 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Iceloof/GoogleNews",
     packages=setuptools.find_packages(),
-    install_requires=['beautifulsoup4','dateparser','python-dateutil'],
+    install_requires=[
+        "beautifulsoup4",
+        "dateparser",
+        "python-dateutil",
+        "selenium",
+        "webdriver-manager",
+    ],
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "License :: OSI Approved :: MIT License",

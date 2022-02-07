@@ -5,6 +5,10 @@ import urllib.request
 import dateparser, copy
 from bs4 import BeautifulSoup as Soup, ResultSet
 from dateutil.parser import parse
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 
 import datetime
 from dateutil.relativedelta import relativedelta
@@ -121,9 +125,12 @@ class GoogleNews:
         self.get_page()
 
     def build_response(self):
-        self.req = urllib.request.Request(self.url.replace("search?","search?hl=en&gl=en&"), headers=self.headers)
-        self.response = urllib.request.urlopen(self.req)
-        self.page = self.response.read()
+        service = ChromeService(executable_path=ChromeDriverManager().install())
+        options = Options()
+        options.headless = True
+        driver = webdriver.Chrome(service=service, options=options)
+        driver.get(self.url.replace("search?","search?hl=en&gl=en&"))
+        self.page = driver.page_source
         self.content = Soup(self.page, "html.parser")
         stats = self.content.find_all("div", id="result-stats")
         if stats and isinstance(stats, ResultSet):
@@ -133,6 +140,7 @@ class GoogleNews:
             #TODO might want to add output for user to know no data was found
             return
         result = self.content.find_all("div", id="search")[0].find_all("g-card")
+        driver.close()
         return result
 
     def page_at(self, page=1):
@@ -184,7 +192,6 @@ class GoogleNews:
                 self.__texts.append(tmp_text)
                 self.__links.append(tmp_link)
                 results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'datetime':define_date(tmp_date),'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
-            self.response.close()
         except Exception as e_parser:
             print(e_parser)
             pass
@@ -238,7 +245,6 @@ class GoogleNews:
                 self.__texts.append(tmp_text)
                 self.__links.append(tmp_link)
                 self.__results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'datetime':define_date(tmp_date),'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
-            self.response.close()
         except Exception as e_parser:
             print(e_parser)
             pass
@@ -256,9 +262,12 @@ class GoogleNews:
         else:
             self.url = 'https://news.google.com/?hl={}'.format(self.__lang)
         try:
-            self.req = urllib.request.Request(self.url, headers=self.headers)
-            self.response = urllib.request.urlopen(self.req)
-            self.page = self.response.read()
+            service = ChromeService(executable_path=ChromeDriverManager().install())
+            options = Options()
+            options.headless = True
+            driver = webdriver.Chrome(service=service, options=options)
+            driver.get(self.url.replace("search?","search?hl=en&gl=en&"))
+            self.page = driver.page_source
             self.content = Soup(self.page, "html.parser")
             articles = self.content.select('div[class="NiLAwe y6IFtc R7GTQ keNKEd j7vNaf nID9nc"]')
             for article in articles:
@@ -319,7 +328,6 @@ class GoogleNews:
                                            'site':site})
                 except Exception as e_article:
                     print(e_article)
-            self.response.close()
         except Exception as e_parser:
             print(e_parser)
             pass
