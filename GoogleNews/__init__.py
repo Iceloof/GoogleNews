@@ -121,7 +121,7 @@ class GoogleNews:
         self.get_page()
 
     def build_response(self):
-        self.req = urllib.request.Request(self.url.replace("search?","search?hl=en&gl=en&"), headers=self.headers)
+        self.req = urllib.request.Request(self.url.replace("search?","search?hl="+self.__lang+"&gl="+self.__lang+"&"), headers=self.headers)
         self.response = urllib.request.urlopen(self.req)
         self.page = self.response.read()
         self.content = Soup(self.page, "html.parser")
@@ -164,7 +164,7 @@ class GoogleNews:
                 except Exception:
                     tmp_link = ''
                 try:
-                    tmp_media = item.findAll("g-img")[1].parent.text
+                    tmp_media = item.findAll("g-img")[0].parent.text
                 except Exception:
                     tmp_media = ''
                 try:
@@ -218,7 +218,7 @@ class GoogleNews:
                 except Exception:
                     tmp_link = ''
                 try:
-                    tmp_media = item.findAll("g-img")[1].parent.text
+                    tmp_media = item.findAll("g-img")[0].parent.text
                 except Exception:
                     tmp_media = ''
                 try:
