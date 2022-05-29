@@ -38,7 +38,9 @@ def define_date(date):
     try:
         if ' ago' in date.lower():
             q = int(date.split()[-3])
-            if 'hour' in date.lower():
+            if 'minutes' in date.lower():
+                return datetime.datetime.now() + relativedelta(minutes=-q)
+            elif 'hour' in date.lower():
                 return datetime.datetime.now() + relativedelta(hours=-q)
             elif 'day' in date.lower():
                 return datetime.datetime.now() + relativedelta(days=-q)
@@ -46,6 +48,8 @@ def define_date(date):
                 return datetime.datetime.now() + relativedelta(days=-7*q)
             elif 'month' in date.lower():
                 return datetime.datetime.now() + relativedelta(months=-q)
+        elif 'yesterday' in date.lower():
+            return datetime.datetime.now() + relativedelta(days=-1)
         else:
             for month in months.keys():
                 if month.lower()+' ' in date.lower():
@@ -75,7 +79,7 @@ class GoogleNews:
         self.__start = start
         self.__end = end
         self.__encode = encode
-        self.__version = '1.6.2'
+        self.__version = '1.6.3'
 
     def getVersion(self):
         return self.__version
