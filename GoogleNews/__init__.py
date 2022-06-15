@@ -136,7 +136,7 @@ class GoogleNews:
         else:
             #TODO might want to add output for user to know no data was found
             return
-        result = self.content.find_all("div", id="search")[0].find_all("g-card")
+        result = self.content.find_all("div", id="search")[0].find("div", id="rso").children
         return result
 
     def page_at(self, page=1):
