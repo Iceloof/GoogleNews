@@ -79,7 +79,7 @@ class GoogleNews:
         self.__start = start
         self.__end = end
         self.__encode = encode
-        self.__version = '1.6.3'
+        self.__version = '1.6.4'
 
     def getVersion(self):
         return self.__version
@@ -136,7 +136,7 @@ class GoogleNews:
         else:
             #TODO might want to add output for user to know no data was found
             return
-        result = self.content.find_all("div", id="search")[0].find_all("g-card")
+        result = self.content.find_all("div", id="search")[0].find("div", id="rso").children
         return result
 
     def page_at(self, page=1):
