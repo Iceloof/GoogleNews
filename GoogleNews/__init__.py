@@ -79,7 +79,7 @@ class GoogleNews:
         self.__start = start
         self.__end = end
         self.__encode = encode
-        self.__version = '1.6.4'
+        self.__version = '1.6.5'
 
     def getVersion(self):
         return self.__version
@@ -136,7 +136,7 @@ class GoogleNews:
         else:
             #TODO might want to add output for user to know no data was found
             return
-        result = self.content.find_all("div", id="search")[0].find("div", id="rso").children
+        result = self.content.find_all("a",{"jsname" : re.compile(r".*")})[3:-1]
         return result
 
     def page_at(self, page=1):
@@ -164,7 +164,7 @@ class GoogleNews:
                 except Exception:
                     tmp_text = ''
                 try:
-                    tmp_link = item.find("a").get("href")
+                    tmp_link = item.get("href")
                 except Exception:
                     tmp_link = ''
                 try:
@@ -218,7 +218,7 @@ class GoogleNews:
                 except Exception:
                     tmp_text = ''
                 try:
-                    tmp_link = item.find("a").get("href")
+                    tmp_link = item.get("href")
                 except Exception:
                     tmp_link = ''
                 try:
