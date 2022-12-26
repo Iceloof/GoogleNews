@@ -29,6 +29,10 @@ googlenews = GoogleNews()
 ```
 print(googlenews.getVersion())
 ```
+- Enable to throw exception
+```
+googlenews.enableException(True)
+```
 - Optional choose language
 ```
 googlenews = GoogleNews(lang='en')

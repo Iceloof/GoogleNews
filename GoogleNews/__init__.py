@@ -1,4 +1,3 @@
-
 ### MODULES
 import re
 import urllib.request
@@ -79,11 +78,15 @@ class GoogleNews:
         self.__start = start
         self.__end = end
         self.__encode = encode
-        self.__version = '1.6.5'
+        self.__exception = False
+        self.__version = '1.6.6'
 
     def getVersion(self):
         return self.__version
     
+    def enableException(self, enable=True):
+        self.__exception = enable
+
     def set_lang(self, lang):
         self.__lang = lang
 
@@ -142,7 +145,6 @@ class GoogleNews:
     def page_at(self, page=1):
         """
         Retrieves a specific page from google.com in the news sections into __results.
-
         Parameter:
         page = number of the page to be retrieved
         """
@@ -191,13 +193,15 @@ class GoogleNews:
             self.response.close()
         except Exception as e_parser:
             print(e_parser)
-            pass
+            if self.__exception:
+                raise Exception(e_parser)
+            else:
+                pass
         return results
 
     def get_page(self, page=1):
         """
         Retrieves a specific page from google.com in the news sections into __results.
-
         Parameter:
         page = number of the page to be retrieved 
         """
@@ -232,7 +236,7 @@ class GoogleNews:
                     tmp_date = ''
                     tmp_datetime=None
                 try:
-                    tmp_desc = item.find("div", {"role" : "heading"}).next_sibling.text
+                    tmp_desc = item.find("div", {"role" : "heading"}).next_sibling.text.replace('\n','')
                 except Exception:
                     tmp_desc = ''
                 try:
@@ -245,7 +249,10 @@ class GoogleNews:
             self.response.close()
         except Exception as e_parser:
             print(e_parser)
-            pass
+            if self.__exception:
+                raise Exception(e_parser)
+            else:
+                pass
 
     def getpage(self, page=1):
         """Don't remove this, will affect old version user when upgrade"""
@@ -253,22 +260,22 @@ class GoogleNews:
 
     def get_news(self, key="",deamplify=False):
         if key != '':
-            key = "+".join(key.split(" "))
-            # if period is set, add it to the query
             if self.__period != "":
                 key += f"+when:{self.__period}"
-            self.url = 'https://news.google.com/search?q={}&hl={}'.format(key,self.__lang.lower())
+            key = "+".join(key.split(" "))
         else:
-            # if no query, users still can use period
             if self.__period != "":
-                self.url += f"when:{self.__period}"
-            self.url = 'https://news.google.com/?hl={}'.format(self.__lang)
+                key += f"when:{self.__period}"
+        key = urllib.request.quote(key.encode(self.__encode))
+        self.url = 'https://news.google.com/search?q={}&hl={}'.format(key,self.__lang.lower())
+       
+        print(self.url)
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
             self.response = urllib.request.urlopen(self.req)
             self.page = self.response.read()
             self.content = Soup(self.page, "html.parser")
-            articles = self.content.select('div[class="NiLAwe y6IFtc R7GTQ keNKEd j7vNaf nID9nc"]')
+            articles = self.content.select('article')
             for article in articles:
                 try:
                     # title
@@ -278,7 +285,7 @@ class GoogleNews:
                         title=None
                     # description
                     try:
-                        desc=article.find('span').text
+                        desc=None
                     except:
                         desc=None
                     # date
@@ -316,6 +323,10 @@ class GoogleNews:
                         site=article.find("time").parent.find("a").text
                     except:
                         site=None
+                    try:
+                        media=article.find("div").find("a").text
+                    except:
+                        media=None
                     # collection
                     self.__results.append({'title':title,
                                            'desc':desc,
@@ -323,14 +334,17 @@ class GoogleNews:
                                            'datetime':define_date(date),
                                            'link':link,
                                            'img':img,
-                                           'media':None,
+                                           'media':media,
                                            'site':site})
                 except Exception as e_article:
                     print(e_article)
             self.response.close()
         except Exception as e_parser:
             print(e_parser)
-            pass
+            if self.__exception:
+                raise Exception(e_parser)
+            else:
+                pass
 
     def total_count(self):
         return self.__totalcount
@@ -348,6 +362,10 @@ class GoogleNews:
                 results.sort(key = lambda x:x['datetime'],reverse=True)
             except Exception as e_sort:
                 print(e_sort)
+                if self.__exception:
+                    raise Exception(e_sort)
+                else:
+                    pass
                 results=self.__results
         return results
 
