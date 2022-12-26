@@ -254,10 +254,14 @@ class GoogleNews:
     def get_news(self, key="",deamplify=False):
         if key != '':
             key = "+".join(key.split(" "))
-            if self.__encode != "":
-                key = urllib.request.quote(key.encode(self.__encode))
-            self.url = 'https://news.google.com/search?q={}+when:{}&hl={}'.format(key,self.__period,self.__lang.lower())
+            # if period is set, add it to the query
+            if self.__period != "":
+                key += f"+when:{self.__period}"
+            self.url = 'https://news.google.com/search?q={}&hl={}'.format(key,self.__lang.lower())
         else:
+            # if no query, users still can use period
+            if self.__period != "":
+                self.url += f"when:{self.__period}"
             self.url = 'https://news.google.com/?hl={}'.format(self.__lang)
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
