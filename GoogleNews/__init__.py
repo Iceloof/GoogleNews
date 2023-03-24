@@ -33,11 +33,11 @@ def lexical_date_parser(date_to_check):
 
 
 def define_date(date):
-    months = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
+    months = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Sept':9,'Oct':10,'Nov':11,'Dec':12, '01':1, '02':2, '03':3, '04':4, '05':5, '06':6, '07':7, '08':8, '09':9, '10':10, '11':11, '12':12}
     try:
         if ' ago' in date.lower():
             q = int(date.split()[-3])
-            if 'minutes' in date.lower():
+            if 'minutes' in date.lower() or 'mins' in date.lower():
                 return datetime.datetime.now() + relativedelta(minutes=-q)
             elif 'hour' in date.lower():
                 return datetime.datetime.now() + relativedelta(hours=-q)
@@ -50,10 +50,13 @@ def define_date(date):
         elif 'yesterday' in date.lower():
             return datetime.datetime.now() + relativedelta(days=-1)
         else:
-            for month in months.keys():
-                if month.lower()+' ' in date.lower():
-                    date_list = date.replace(',','').split()[-3:]
-                    return datetime.datetime(day=int(date_list[1]), month=months[month], year=int(date_list[2]))
+            date_list = date.replace('/',' ').split(' ')
+            if len(date_list) == 2:
+                date_list.append(datetime.datetime.now().year)
+            elif len(date_list) == 3:
+                if date_list[0] == '':
+                    date_list[0] = '1'
+            return datetime.datetime(day=int(date_list[0]), month=months[date_list[1]], year=int(date_list[2]))
     except:
         return float('nan')
 
@@ -79,7 +82,7 @@ class GoogleNews:
         self.__end = end
         self.__encode = encode
         self.__exception = False
-        self.__version = '1.6.6'
+        self.__version = '1.6.7'
 
     def getVersion(self):
         return self.__version
@@ -268,8 +271,7 @@ class GoogleNews:
                 key += f"when:{self.__period}"
         key = urllib.request.quote(key.encode(self.__encode))
         self.url = 'https://news.google.com/search?q={}&hl={}'.format(key,self.__lang.lower())
-       
-        print(self.url)
+
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
             self.response = urllib.request.urlopen(self.req)
