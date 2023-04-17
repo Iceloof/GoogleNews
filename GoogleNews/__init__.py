@@ -183,6 +183,10 @@ class GoogleNews:
                     tmp_date = ''
                     tmp_datetime=None
                 try:
+                    tmp_datetime = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').text
+                except Exception:
+                    tmp_datetime = None
+                try:
                     tmp_desc = item.find("div", {"role" : "heading"}).next_sibling.text
                 except Exception:
                     tmp_desc = ''
@@ -192,7 +196,7 @@ class GoogleNews:
                     tmp_img = ''
                 self.__texts.append(tmp_text)
                 self.__links.append(tmp_link)
-                results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'datetime':define_date(tmp_date),'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
+                results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'datetime':tmp_datetime,'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
             self.response.close()
         except Exception as e_parser:
             print(e_parser)
