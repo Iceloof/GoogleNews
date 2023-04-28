@@ -125,7 +125,7 @@ class GoogleNews:
         Parameters:
         key = the search term
         """
-        self.__key = "+".join(key.split(" "))
+        self.__key = key
         if self.__encode != "":
             self.__key = urllib.request.quote(self.__key.encode(self.__encode))
         self.get_page()
@@ -264,8 +264,7 @@ class GoogleNews:
     def get_news(self, key="",deamplify=False):
         if key != '':
             if self.__period != "":
-                key += f"+when:{self.__period}"
-            key = "+".join(key.split(" "))
+                key += f" when:{self.__period}"
         else:
             if self.__period != "":
                 key += f"when:{self.__period}"
