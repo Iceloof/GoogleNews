@@ -51,7 +51,7 @@ class TestStringMethods(unittest.TestCase):
 
   def testVersion(self):
     googlenews = GoogleNews()
-    version = '1.6.7'
+    version = '1.6.8'
     self.assertIn(version, googlenews.getVersion())
     print('Latest version matched')
     

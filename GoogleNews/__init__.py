@@ -82,7 +82,7 @@ class GoogleNews:
         self.__end = end
         self.__encode = encode
         self.__exception = False
-        self.__version = '1.6.7'
+        self.__version = '1.6.8'
 
     def getVersion(self):
         return self.__version
