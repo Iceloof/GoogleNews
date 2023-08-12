@@ -32,12 +32,12 @@ class NumbersTest(unittest.TestCase):
     self.assertNotEqual(length, 0)
     print('Encoding result is not empty')
 
-  def testTotalCountGreaterThanZero(self):
-    googlenews = GoogleNews()
-    googlenews.search(keyword)
-    count = googlenews.total_count()
-    self.assertGreater(count, 0)
-    print('Total count is greater than zero')
+  # def testTotalCountGreaterThanZero(self):
+  #   googlenews = GoogleNews()
+  #   googlenews.search(keyword)
+  #   count = googlenews.total_count()
+  #   self.assertGreater(count, 0)
+  #   print('Total count is greater than zero')
 
   def testResultNumberAtTwoPages(self):
     googlenews = GoogleNews()
@@ -51,7 +51,7 @@ class TestStringMethods(unittest.TestCase):
 
   def testVersion(self):
     googlenews = GoogleNews()
-    version = '1.6.8'
+    version = '1.6.9'
     self.assertIn(version, googlenews.getVersion())
     print('Latest version matched')
     

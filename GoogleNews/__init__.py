@@ -7,7 +7,7 @@ from dateutil.parser import parse
 
 import datetime
 from dateutil.relativedelta import relativedelta
-
+import logging
 ### METHODS
 
 def lexical_date_parser(date_to_check):
@@ -82,7 +82,7 @@ class GoogleNews:
         self.__end = end
         self.__encode = encode
         self.__exception = False
-        self.__version = '1.6.8'
+        self.__version = '1.6.9'
 
     def getVersion(self):
         return self.__version
@@ -141,7 +141,8 @@ class GoogleNews:
             self.__totalcount = int(stats.group().replace(',', ''))
         else:
             #TODO might want to add output for user to know no data was found
-            return
+            self.__totalcount = None
+            logging.debug('Total count is not available when sort by date')
         result = self.content.find_all("a",{"jsname" : re.compile(r".*")})[3:-1]
         return result
 
@@ -165,7 +166,7 @@ class GoogleNews:
             result = self.build_response()
             for item in result:
                 try:
-                    tmp_text = item.find("div", {"role" : "heading"}).text.replace("\n","")
+                    tmp_text = item.find("h3").text.replace("\n","")
                 except Exception:
                     tmp_text = ''
                 try:
@@ -173,21 +174,21 @@ class GoogleNews:
                 except Exception:
                     tmp_link = ''
                 try:
-                    tmp_media = item.findAll("g-img")[0].parent.text
+                    tmp_media = item.find('div').find('div').find('div').find_next_sibling('div').text
                 except Exception:
                     tmp_media = ''
                 try:
-                    tmp_date = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').text
+                    tmp_date = item.find('div').find_next_sibling('div').find('span').text
                     tmp_date,tmp_datetime=lexical_date_parser(tmp_date)
                 except Exception:
                     tmp_date = ''
                     tmp_datetime=None
                 try:
-                    tmp_desc = item.find("div", {"role" : "heading"}).next_sibling.text
+                    tmp_desc = item.find_next_sibling('div').find('div').find_next_sibling('div').find('div').find('div').find('div').contents[0].replace('\n','')
                 except Exception:
                     tmp_desc = ''
                 try:
-                    tmp_img = item.findAll("g-img")[0].find("img").get("src")
+                    tmp_img = item.find("img").get("src")
                 except Exception:
                     tmp_img = ''
                 self.__texts.append(tmp_text)
@@ -221,7 +222,7 @@ class GoogleNews:
             result = self.build_response()
             for item in result:
                 try:
-                    tmp_text = item.find("div", {"role" : "heading"}).text.replace("\n","")
+                    tmp_text = item.find("h3").text.replace("\n","")
                 except Exception:
                     tmp_text = ''
                 try:
@@ -229,21 +230,21 @@ class GoogleNews:
                 except Exception:
                     tmp_link = ''
                 try:
-                    tmp_media = item.findAll("g-img")[0].parent.text
+                    tmp_media = item.find('div').find('div').find('div').find_next_sibling('div').text
                 except Exception:
                     tmp_media = ''
                 try:
-                    tmp_date = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').text
+                    tmp_date = item.find('div').find_next_sibling('div').find('span').text
                     tmp_date,tmp_datetime=lexical_date_parser(tmp_date)
                 except Exception:
                     tmp_date = ''
                     tmp_datetime=None
                 try:
-                    tmp_desc = item.find("div", {"role" : "heading"}).next_sibling.text.replace('\n','')
+                    tmp_desc = item.find_next_sibling('div').find('div').find_next_sibling('div').find('div').find('div').find('div').contents[0].replace('\n','')
                 except Exception:
                     tmp_desc = ''
                 try:
-                    tmp_img = item.findAll("g-img")[0].find("img").get("src")
+                    tmp_img = item.find("img").get("src")
                 except Exception:
                     tmp_img = ''
                 self.__texts.append(tmp_text)

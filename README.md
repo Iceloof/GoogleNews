@@ -78,7 +78,7 @@ googlenews.get_page(2)
 ```
 result = googlenews.page_at(2)
 ```
-- If you want to get the total result number of the search(this is approximate number, not exact number, it is the number showing on the google search page)
+- If you want to get the total result number of the search(this is approximate number, not exact number, it is the number showing on the google search page) (Note: this function is not available for `googlenews.search()`)
 ```
 googlenews.total_count()
 ```
