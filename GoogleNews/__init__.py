@@ -82,7 +82,7 @@ class GoogleNews:
         self.__end = end
         self.__encode = encode
         self.__exception = False
-        self.__version = '1.6.10'
+        self.__version = '1.6.11'
 
     def getVersion(self):
         return self.__version
@@ -282,7 +282,7 @@ class GoogleNews:
                 try:
                     # title
                     try:
-                        title=article.find('h3').text
+                        title=article.find('h4').text
                     except:
                         title=None
                     # description
@@ -305,19 +305,23 @@ class GoogleNews:
                     # link
                     if deamplify:
                         try:
-                            link = 'news.google.com/' + article.find("h3").find("a").get("href")
+                            link = 'news.google.com/' + article.find("h4").parent.get("href")[2:]
                         except Exception as deamp_e:
                             print(deamp_e)
                             link = article.find("article").get("jslog").split('2:')[1].split(';')[0]
                     else:
-                            link = 'news.google.com/' + article.find("h3").find("a").get("href")
+                        try:
+                            link = 'news.google.com/' + article.find("h4").parent.get("href")[2:]
+                        except Exception as deamp_e:
+                            print(deamp_e)
+                            link = None
                     self.__texts.append(title)
                     self.__links.append(link)
                     if link.startswith('https://www.youtube.com/watch?v='):
                         desc = 'video'
                     # image
                     try:
-                        img = article.find("img").get("src")
+                        img = article.find("figure").find("img").get("src")
                     except:
                         img = None
                     # site
@@ -326,7 +330,7 @@ class GoogleNews:
                     except:
                         site=None
                     try:
-                        media=article.find("div").find("a").text
+                        media=article.find("div").findAll("div")[1].find("div").find("div").find("div").text
                     except:
                         media=None
                     # collection
