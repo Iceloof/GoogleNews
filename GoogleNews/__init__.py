@@ -311,7 +311,7 @@ class GoogleNews:
                             link = article.find("article").get("jslog").split('2:')[1].split(';')[0]
                     else:
                         try:
-                            link = 'news.google.com/' + article.find("h4").parent.get("href")[2:]
+                            link = 'news.google.com/' + article.find("a").get("href")[2:]
                         except Exception as deamp_e:
                             print(deamp_e)
                             link = None
