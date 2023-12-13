@@ -82,7 +82,7 @@ class GoogleNews:
         self.__end = end
         self.__encode = encode
         self.__exception = False
-        self.__version = '1.6.11'
+        self.__version = '1.6.12'
 
     def getVersion(self):
         return self.__version
@@ -282,7 +282,7 @@ class GoogleNews:
                 try:
                     # title
                     try:
-                        title=article.find('h4').text
+                        title=article.findAll('div')[2].text
                     except:
                         title=None
                     # description
@@ -305,13 +305,13 @@ class GoogleNews:
                     # link
                     if deamplify:
                         try:
-                            link = 'news.google.com/' + article.find("h4").parent.get("href")[2:]
+                            link = 'news.google.com/' + article.find('div').find("a").get("href")[2:]
                         except Exception as deamp_e:
                             print(deamp_e)
                             link = article.find("article").get("jslog").split('2:')[1].split(';')[0]
                     else:
                         try:
-                            link = 'news.google.com/' + article.find("a").get("href")[2:]
+                            link = 'news.google.com/' + article.find('div').find("a").get("href")[2:]
                         except Exception as deamp_e:
                             print(deamp_e)
                             link = None
