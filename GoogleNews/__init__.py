@@ -282,7 +282,7 @@ class GoogleNews:
                 try:
                     # title
                     try:
-                        title=article.findAll('div')[2].text
+                        title=article.findAll('div')[3].find('a').text
                     except:
                         title=None
                     # description
