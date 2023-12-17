@@ -10,6 +10,10 @@ from dateutil.relativedelta import relativedelta
 import logging
 ### METHODS
 
+def remove_more_from_title(text):
+    more_index = text.find("More")
+    return text[:more_index] + ": " + text[more_index + 4:] if more_index != -1 else text
+
 def lexical_date_parser(date_to_check):
     if date_to_check=='':
         return ('',None)
@@ -193,7 +197,7 @@ class GoogleNews:
                     tmp_img = ''
                 self.__texts.append(tmp_text)
                 self.__links.append(tmp_link)
-                results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'datetime':define_date(tmp_date),'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
+                results.append({'title': remove_more_from_title(tmp_text), 'media': tmp_media,'date': tmp_date,'datetime':define_date(tmp_date),'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
             self.response.close()
         except Exception as e_parser:
             print(e_parser)
@@ -249,7 +253,7 @@ class GoogleNews:
                     tmp_img = ''
                 self.__texts.append(tmp_text)
                 self.__links.append(tmp_link)
-                self.__results.append({'title': tmp_text, 'media': tmp_media,'date': tmp_date,'datetime':define_date(tmp_date),'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
+                self.__results.append({'title': remove_more_from_title(tmp_text), 'media': tmp_media,'date': tmp_date,'datetime':define_date(tmp_date),'desc': tmp_desc, 'link': tmp_link,'img': tmp_img})
             self.response.close()
         except Exception as e_parser:
             print(e_parser)
@@ -334,7 +338,7 @@ class GoogleNews:
                     except:
                         media=None
                     # collection
-                    self.__results.append({'title':title,
+                    self.__results.append({'title':remove_more_from_title(title),
                                            'desc':desc,
                                            'date':date,
                                            'datetime':define_date(date),
