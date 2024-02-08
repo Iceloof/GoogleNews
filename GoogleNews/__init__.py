@@ -270,7 +270,9 @@ class GoogleNews:
             if self.__period != "":
                 key += f"when:{self.__period}"
         key = urllib.request.quote(key.encode(self.__encode))
-        self.url = 'https://news.google.com/search?q={}&hl={}'.format(key,self.__lang.lower())
+        start = f'{self.__start[-4:]}-{self.__start[:2]}-{self.__start[3:5]}'
+        end = f'{self.__end[-4:]}-{self.__end[:2]}-{self.__end[3:5]}'
+        self.url = 'https://news.google.com/search?q={}+before:{}+after:{}&hl={}'.format(key,end, start, self.__lang.lower())
 
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
