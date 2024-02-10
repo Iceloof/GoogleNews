@@ -82,7 +82,7 @@ class GoogleNews:
         self.__end = end
         self.__encode = encode
         self.__exception = False
-        self.__version = '1.6.12'
+        self.__version = '1.6.13'
 
     def getVersion(self):
         return self.__version
@@ -284,7 +284,7 @@ class GoogleNews:
                 try:
                     # title
                     try:
-                        title=article.findAll('div')[2].text
+                        title=article.findAll('div')[2].findAll('a')[0].text
                     except:
                         title=None
                     # description
