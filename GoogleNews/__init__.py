@@ -82,7 +82,7 @@ class GoogleNews:
         self.__end = end
         self.__encode = encode
         self.__exception = False
-        self.__version = '1.6.13'
+        self.__version = '1.6.14'
 
     def getVersion(self):
         return self.__version
@@ -146,6 +146,12 @@ class GoogleNews:
         result = self.content.find_all("a",attrs={'data-ved': True})
         return result
 
+    def remove_after_last_fullstop(self, s):
+        # Find the last occurrence of the full stop
+        last_period_index = s.rfind('.')
+        # Slice the string up to the last full stop
+        return s[:last_period_index+1] if last_period_index != -1 else s
+    
     def page_at(self, page=1):
         """
         Retrieves a specific page from google.com in the news sections into __results.
@@ -184,7 +190,7 @@ class GoogleNews:
                     tmp_date = ''
                     tmp_datetime=None
                 try:
-                    tmp_desc = item.find_next_sibling('div').find('div').find_next_sibling('div').find('div').find('div').find('div').contents[0].replace('\n','')
+                    tmp_desc = self.remove_after_last_fullstop(item.find('div').find_next_sibling('div').find('div').find_next_sibling('div').find('div').find('div').find('div').text).replace('\n','')
                 except Exception:
                     tmp_desc = ''
                 try:
@@ -240,7 +246,7 @@ class GoogleNews:
                     tmp_date = ''
                     tmp_datetime=None
                 try:
-                    tmp_desc = item.find_next_sibling('div').find('div').find_next_sibling('div').find('div').find('div').find('div').contents[0].replace('\n','')
+                    tmp_desc = self.remove_after_last_fullstop(item.find('div').find_next_sibling('div').find('div').find_next_sibling('div').find('div').find('div').find('div').text).replace('\n','')
                 except Exception:
                     tmp_desc = ''
                 try:
@@ -329,7 +335,7 @@ class GoogleNews:
                         desc = 'video'
                     # image
                     try:
-                        img = article.find("figure").find("img").get("src")
+                        img = 'news.google.com'+article.find("figure").find("img").get("src")
                     except:
                         img = None
                     # site
