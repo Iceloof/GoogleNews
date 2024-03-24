@@ -341,6 +341,11 @@ class GoogleNews:
                         media=article.find("div").findAll("div")[1].find("div").find("div").find("div").text
                     except:
                         media=None
+                    # reporter
+                    try:
+                        reporter = article.findAll('span')[2].text
+                    except:
+                        reporter = None
                     # collection
                     self.__results.append({'title':title,
                                            'desc':desc,
@@ -349,7 +354,8 @@ class GoogleNews:
                                            'link':link,
                                            'img':img,
                                            'media':media,
-                                           'site':site})
+                                           'site':site,
+                                           'reporter':reporter})
                 except Exception as e_article:
                     print(e_article)
             self.response.close()
