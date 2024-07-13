@@ -125,9 +125,11 @@ class GoogleNews:
         Parameters:
         key = the search term
         """
+
         self.__key = key
         if self.__encode != "":
             self.__key = urllib.request.quote(self.__key.encode(self.__encode))
+
         self.get_page()
 
     def build_response(self):
@@ -215,6 +217,7 @@ class GoogleNews:
         Parameter:
         page = number of the page to be retrieved 
         """
+
         try:
             if self.__start != "" and self.__end != "":
                 self.url = "https://www.google.com/search?q={}&lr=lang_{}&biw=1920&bih=976&source=lnt&&tbs=lr:lang_1{},cdr:1,cd_min:{},cd_max:{},sbd:1&tbm=nws&start={}".format(self.__key,self.__lang,self.__lang,self.__start,self.__end,(10 * (page - 1)))
@@ -224,6 +227,7 @@ class GoogleNews:
                 self.url = "https://www.google.com/search?q={}&lr=lang_{}&biw=1920&bih=976&source=lnt&&tbs=lr:lang_1{},sbd:1&tbm=nws&start={}".format(self.__key,self.__lang,self.__lang,(10 * (page - 1))) 
         except AttributeError:
             raise AttributeError("You need to run a search() before using get_page().")
+        
         try:
             result = self.build_response()
             for item in result:
@@ -268,7 +272,7 @@ class GoogleNews:
         """Don't remove this, will affect old version user when upgrade"""
         self.get_page(page)
 
-    def get_news(self, key="",deamplify=False):
+    def get_news(self, key="", page=1, deamplify=False):
         if key != '':
             if self.__period != "":
                 key += f" when:{self.__period}"
@@ -280,11 +284,9 @@ class GoogleNews:
         end = f'{self.__end[-4:]}-{self.__end[:2]}-{self.__end[3:5]}'
         
         if self.__start == '' or self.__end == '':
-            self.url = 'https://news.google.com/search?q={}&hl={}'.format(
-                key, self.__period, self.__lang.lower())
+            self.url = 'https://news.google.com/search?q={}&hl={}&start={}'.format(key, page, self.__period, self.__lang.lower())
         else:
-            self.url = 'https://news.google.com/search?q={}+before:{}+after:{}&hl={}'.format(
-                key, end, start, self.__lang.lower())
+            self.url = 'https://news.google.com/search?q={}+page:{}+before:{}+after:{}&hl={}'.format(key, page, end, start, self.__lang.lower())
 
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)

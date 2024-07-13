@@ -62,7 +62,7 @@ googlenews.set_encode('utf-8')
 ```
 - **news.google.com** search sample
 ```
-googlenews.get_news('APPLE')
+googlenews.get_news('APPLE', <page number>)
 ```
 - **google.com** section news search sample
 ```
@@ -103,6 +103,6 @@ googlenews.clear()
 ## Issue
 Image is not working in the latest version, it can only return default google loading gif
 
-The date range is not always working as Google may return the result with random order or out of date range.
+The date range does not work when using the `search()` function as Google may return the result with random order or out of date range. However, the date range does work with the `get_news()` function, which can be used in the same way as search (except only news articles will be shown with this method).
 
-Google may recognize the program as automated robots and block the IP, using cloud server and fetching data with high frequency will get higher chance to be blocked. 
+Google may recognize the program as automated robots and block the IP, using cloud server and fetching data with high frequency will get higher chance to be blocked.
