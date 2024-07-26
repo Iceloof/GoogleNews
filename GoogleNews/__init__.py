@@ -84,6 +84,7 @@ class GoogleNews:
         self.__exception = False
         self.__version = '1.6.14'
         self.__topic = None
+        self.__section = None
 
     def getVersion(self):
         return self.__version
@@ -116,8 +117,12 @@ class GoogleNews:
     def set_encode(self, encode):
         self.__encode = encode
 
-    def set_topic(self, topic):
+    def set_topic(self, topic: str):
         self.__topic = topic
+        
+    def set_section(self, section: str):
+        self.__section = section
+        
     def setencode(self, encode):
         """Don't remove this, will affect old version user when upgrade"""
         self.set_encode(encode)
@@ -290,8 +295,14 @@ class GoogleNews:
                 key, end, start, self.__lang.lower())
         
         if self.__topic:
-             self.url = 'https://news.google.com/topics/{}'.format(
+            self.url = 'https://news.google.com/topics/{}'.format(
                 self.__topic)
+            
+            if self.__section:
+                self.url = 'https://news.google.com/topics/{}/sections/{}'.format(
+                self.__topic, self.__section)
+                
+            
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
             self.response = urllib.request.urlopen(self.req)
