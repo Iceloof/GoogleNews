@@ -82,7 +82,7 @@ class GoogleNews:
         self.__end = end
         self.__encode = encode
         self.__exception = False
-        self.__version = '1.6.14'
+        self.__version = '1.6.15'
         self.__topic = None
         self.__section = None
 
