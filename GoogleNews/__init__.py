@@ -83,6 +83,7 @@ class GoogleNews:
         self.__encode = encode
         self.__exception = False
         self.__version = '1.6.14'
+        self.__topic = None
 
     def getVersion(self):
         return self.__version
@@ -115,6 +116,8 @@ class GoogleNews:
     def set_encode(self, encode):
         self.__encode = encode
 
+    def set_topic(self, topic):
+        self.__topic = topic
     def setencode(self, encode):
         """Don't remove this, will affect old version user when upgrade"""
         self.set_encode(encode)
@@ -285,7 +288,10 @@ class GoogleNews:
         else:
             self.url = 'https://news.google.com/search?q={}+before:{}+after:{}&hl={}'.format(
                 key, end, start, self.__lang.lower())
-
+        
+        if self.__topic:
+             self.url = 'https://news.google.com/topics/{}'.format(
+                self.__topic)
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
             self.response = urllib.request.urlopen(self.req)
@@ -319,13 +325,13 @@ class GoogleNews:
                     # link
                     if deamplify:
                         try:
-                            link = 'news.google.com/' + article.find('div').find("a").get("href")[2:]
+                            link = 'https://news.google.com/' + article.find('div').find("a").get("href")[2:]
                         except Exception as deamp_e:
                             print(deamp_e)
                             link = article.find("article").get("jslog").split('2:')[1].split(';')[0]
                     else:
                         try:
-                            link = 'news.google.com/' + article.find('div').find("a").get("href")[2:]
+                            link = 'https://news.google.com/' + article.find('div').find("a").get("href")[2:]
                         except Exception as deamp_e:
                             print(deamp_e)
                             link = None
@@ -335,7 +341,7 @@ class GoogleNews:
                         desc = 'video'
                     # image
                     try:
-                        img = 'news.google.com'+article.find("figure").find("img").get("src")
+                        img = 'https://news.google.com'+article.find("figure").find("img").get("src")
                     except:
                         img = None
                     # site
