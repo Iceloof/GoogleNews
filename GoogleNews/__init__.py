@@ -315,7 +315,10 @@ class GoogleNews:
                     try:
                         title=article.findAll('div')[2].findAll('a')[0].text
                     except:
-                        title=None
+                        try:
+                            title=article.findAll('a')[1].text
+                        except:
+                            title=None
                     # description
                     try:
                         desc=None
@@ -363,7 +366,10 @@ class GoogleNews:
                     try:
                         media=article.find("div").findAll("div")[1].find("div").find("div").find("div").text
                     except:
-                        media=None
+                        try:
+                            media=article.findAll("div")[1].find("div").find("div").find("div").text
+                        except:
+                            media=None
                     # reporter
                     try:
                         reporter = article.findAll('span')[2].text
