@@ -289,7 +289,7 @@ class GoogleNews:
         
         if self.__start == '' or self.__end == '':
             self.url = 'https://news.google.com/search?q={}&hl={}'.format(
-                key, self.__period, self.__lang.lower())
+                key, self.__lang.lower())
         else:
             self.url = 'https://news.google.com/search?q={}+before:{}+after:{}&hl={}'.format(
                 key, end, start, self.__lang.lower())
