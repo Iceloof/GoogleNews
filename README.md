@@ -64,6 +64,21 @@ googlenews.set_encode('utf-8')
 ```
 googlenews.get_news('APPLE')
 ```
+- **news.google.com get news by topics
+```
+# Sports
+googlenews.set_topic('CAAqKggKIiRDQkFTRlFvSUwyMHZNRFp1ZEdvU0JYQjBMVUpTR2dKQ1VpZ0FQAQ')
+googlenews.get_news()
+```
+- **news.google.com get news by topic and sections
+```
+# Sports
+googlenews.set_topic('CAAqKggKIiRDQkFTRlFvSUwyMHZNRFp1ZEdvU0JYQjBMVUpTR2dKQ1VpZ0FQAQ')
+# Football Soccer
+googlenews.set_section('CAQiS0NCQVNNZ29JTDIwdk1EWnVkR29TQlhCMExVSlNHZ0pDVWlJT0NBUWFDZ29JTDIwdk1ESjJlRFFxQ3dvSkVnZEdkWFJsWW05c0tBQSouCAAqKggKIiRDQkFTRlFvSUwyMHZNRFp1ZEdvU0JYQjBMVUpTR2dKQ1VpZ0FQAVAB')
+
+googlenews.get_news()
+```
 - **google.com** section news search sample
 ```
 googlenews.search('APPLE')

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="GoogleNews",
-    version="1.6.14",
+    version="1.6.15",
     author="Hurin Hu",
     author_email="hurin@live.ca",
     description="Google News search for Python",
