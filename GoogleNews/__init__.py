@@ -82,7 +82,7 @@ class GoogleNews:
         self.__end = end
         self.__encode = encode
         self.__exception = False
-        self.__version = '1.6.15'
+        self.__version = '1.6.16'
         self.__topic = None
         self.__section = None
 
@@ -136,7 +136,8 @@ class GoogleNews:
         self.__key = key
         if self.__encode != "":
             self.__key = urllib.request.quote(self.__key.encode(self.__encode))
-        self.get_page()
+        #self.get_page()
+        self.get_news(self.__key)
 
     def build_response(self):
         self.req = urllib.request.Request(self.url.replace("search?","search?hl="+self.__lang+"&gl="+self.__lang+"&"), headers=self.headers)
@@ -308,17 +309,14 @@ class GoogleNews:
             self.response = urllib.request.urlopen(self.req)
             self.page = self.response.read()
             self.content = Soup(self.page, "html.parser")
-            articles = self.content.select('article')
+            articles = self.content.find_all("c-wiz", attrs={"data-node-index": re.compile(r"^1;")})
             for article in articles:
                 try:
                     # title
                     try:
-                        title=article.findAll('div')[2].findAll('a')[0].text
+                        title=article.findAll('a')[1].text
                     except:
-                        try:
-                            title=article.findAll('a')[1].text
-                        except:
-                            title=None
+                        title=None
                     # description
                     try:
                         desc=None
@@ -339,19 +337,19 @@ class GoogleNews:
                     # link
                     if deamplify:
                         try:
-                            link = 'https://news.google.com/' + article.find('div').find("a").get("href")[2:]
+                            link = 'https://news.google.com/' + article.find("a").get("href")[2:]
                         except Exception as deamp_e:
                             print(deamp_e)
                             link = article.find("article").get("jslog").split('2:')[1].split(';')[0]
                     else:
                         try:
-                            link = 'https://news.google.com/' + article.find('div').find("a").get("href")[2:]
+                            link = 'https://news.google.com/' + article.find("a").get("href")[2:]
                         except Exception as deamp_e:
                             print(deamp_e)
                             link = None
                     self.__texts.append(title)
                     self.__links.append(link)
-                    if link.startswith('https://www.youtube.com/watch?v='):
+                    if link is not None and link.startswith('https://www.youtube.com/watch?v='):
                         desc = 'video'
                     # image
                     try:
@@ -364,12 +362,9 @@ class GoogleNews:
                     except:
                         site=None
                     try:
-                        media=article.find("div").findAll("div")[1].find("div").find("div").find("div").text
+                        media=article.find_all("div", attrs={"data-n-tid": True})[-1].text
                     except:
-                        try:
-                            media=article.findAll("div")[1].find("div").find("div").find("div").text
-                        except:
-                            media=None
+                        media=None
                     # reporter
                     try:
                         reporter = article.findAll('span')[2].text

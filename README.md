@@ -79,7 +79,7 @@ googlenews.set_section('CAQiS0NCQVNNZ29JTDIwdk1EWnVkR29TQlhCMExVSlNHZ0pDVWlJT0NB
 
 googlenews.get_news()
 ```
-- **google.com** section news search sample
+- **google.com** section news search sample (Not working anymore)
 ```
 googlenews.search('APPLE')
 ```
