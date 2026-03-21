@@ -1,4 +1,3 @@
-
 ### MODULES
 import re
 import urllib.request
@@ -8,7 +7,7 @@ from dateutil.parser import parse
 
 import datetime
 from dateutil.relativedelta import relativedelta
-
+import logging
 ### METHODS
 
 def lexical_date_parser(date_to_check):
@@ -16,12 +15,12 @@ def lexical_date_parser(date_to_check):
         return ('',None)
     datetime_tmp=None
     date_tmp=copy.copy(date_to_check)
-    count=0
-    while datetime_tmp==None and count <= (len(date_to_check)-3):
+    try:
+        date_tmp = date_tmp[date_tmp.rfind('..')+2:]
         datetime_tmp=dateparser.parse(date_tmp)
-        if datetime_tmp==None:
-            date_tmp=date_tmp[1:]
-        count+=1
+    except:
+        date_tmp = None
+        datetime_tmp = None
 
     if datetime_tmp==None:
         date_tmp=date_to_check
@@ -34,11 +33,13 @@ def lexical_date_parser(date_to_check):
 
 
 def define_date(date):
-    months = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
+    months = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Sept':9,'Oct':10,'Nov':11,'Dec':12, '01':1, '02':2, '03':3, '04':4, '05':5, '06':6, '07':7, '08':8, '09':9, '10':10, '11':11, '12':12}
     try:
         if ' ago' in date.lower():
             q = int(date.split()[-3])
-            if 'hour' in date.lower():
+            if 'minutes' in date.lower() or 'mins' in date.lower():
+                return datetime.datetime.now() + relativedelta(minutes=-q)
+            elif 'hour' in date.lower():
                 return datetime.datetime.now() + relativedelta(hours=-q)
             elif 'day' in date.lower():
                 return datetime.datetime.now() + relativedelta(days=-q)
@@ -46,11 +47,16 @@ def define_date(date):
                 return datetime.datetime.now() + relativedelta(days=-7*q)
             elif 'month' in date.lower():
                 return datetime.datetime.now() + relativedelta(months=-q)
+        elif 'yesterday' in date.lower():
+            return datetime.datetime.now() + relativedelta(days=-1)
         else:
-            for month in months.keys():
-                if month.lower()+' ' in date.lower():
-                    date_list = date.replace(',','').split()[-3:]
-                    return datetime.datetime(day=int(date_list[1]), month=months[month], year=int(date_list[2]))
+            date_list = date.replace('/',' ').split(' ')
+            if len(date_list) == 2:
+                date_list.append(datetime.datetime.now().year)
+            elif len(date_list) == 3:
+                if date_list[0] == '':
+                    date_list[0] = '1'
+            return datetime.datetime(day=int(date_list[0]), month=months[date_list[1]], year=int(date_list[2]))
     except:
         return float('nan')
 
@@ -75,6 +81,16 @@ class GoogleNews:
         self.__start = start
         self.__end = end
         self.__encode = encode
+        self.__exception = False
+        self.__version = '1.6.16'
+        self.__topic = None
+        self.__section = None
+
+    def getVersion(self):
+        return self.__version
+    
+    def enableException(self, enable=True):
+        self.__exception = enable
 
     def set_lang(self, lang):
         self.__lang = lang
@@ -101,6 +117,12 @@ class GoogleNews:
     def set_encode(self, encode):
         self.__encode = encode
 
+    def set_topic(self, topic: str):
+        self.__topic = topic
+        
+    def set_section(self, section: str):
+        self.__section = section
+        
     def setencode(self, encode):
         """Don't remove this, will affect old version user when upgrade"""
         self.set_encode(encode)
@@ -111,10 +133,11 @@ class GoogleNews:
         Parameters:
         key = the search term
         """
-        self.__key = "+".join(key.split(" "))
+        self.__key = key
         if self.__encode != "":
             self.__key = urllib.request.quote(self.__key.encode(self.__encode))
-        self.get_page()
+        #self.get_page()
+        self.get_news(self.__key)
 
     def build_response(self):
         self.req = urllib.request.Request(self.url.replace("search?","search?hl=en&gl=en&"), headers=self.headers)
@@ -129,14 +152,20 @@ class GoogleNews:
             self.__totalcount = int(stats.group().replace(',', ''))
         else:
             #TODO might want to add output for user to know no data was found
-            return
-        result = self.content.find_all("div", id="search")[0].find_all("g-card")
+            self.__totalcount = None
+            logging.debug('Total count is not available when sort by date')
+        result = self.content.find_all("a",attrs={'data-ved': True})
         return result
 
+    def remove_after_last_fullstop(self, s):
+        # Find the last occurrence of the full stop
+        last_period_index = s.rfind('.')
+        # Slice the string up to the last full stop
+        return s[:last_period_index+1] if last_period_index != -1 else s
+    
     def page_at(self, page=1):
         """
         Retrieves a specific page from google.com in the news sections into __results.
-
         Parameter:
         page = number of the page to be retrieved
         """
@@ -154,29 +183,29 @@ class GoogleNews:
             result = self.build_response()
             for item in result:
                 try:
-                    tmp_text = item.find("div", {"role" : "heading"}).text.replace("\n","")
+                    tmp_text = item.find("h3").text.replace("\n","")
                 except Exception:
                     tmp_text = ''
                 try:
-                    tmp_link = item.find("a").get("href")
+                    tmp_link = item.get("href").replace('/url?esrc=s&q=&rct=j&sa=U&url=','')
                 except Exception:
                     tmp_link = ''
                 try:
-                    tmp_media = item.findAll("g-img")[1].parent.text
+                    tmp_media = item.find('div').find('div').find('div').find_next_sibling('div').text
                 except Exception:
                     tmp_media = ''
                 try:
-                    tmp_date = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').findNext('div').text
+                    tmp_date = item.find('div').find_next_sibling('div').find('span').text
                     tmp_date,tmp_datetime=lexical_date_parser(tmp_date)
                 except Exception:
                     tmp_date = ''
                     tmp_datetime=None
                 try:
-                    tmp_desc = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').text.replace("\n","")
+                    tmp_desc = self.remove_after_last_fullstop(item.find('div').find_next_sibling('div').find('div').find_next_sibling('div').find('div').find('div').find('div').text).replace('\n','')
                 except Exception:
                     tmp_desc = ''
                 try:
-                    tmp_img = item.findAll("g-img")[0].find("img").get("src")
+                    tmp_img = item.find("img").get("src")
                 except Exception:
                     tmp_img = ''
                 self.__texts.append(tmp_text)
@@ -185,13 +214,15 @@ class GoogleNews:
             self.response.close()
         except Exception as e_parser:
             print(e_parser)
-            pass
+            if self.__exception:
+                raise Exception(e_parser)
+            else:
+                pass
         return results
 
     def get_page(self, page=1):
         """
         Retrieves a specific page from google.com in the news sections into __results.
-
         Parameter:
         page = number of the page to be retrieved 
         """
@@ -208,29 +239,29 @@ class GoogleNews:
             result = self.build_response()
             for item in result:
                 try:
-                    tmp_text = item.find("div", {"role" : "heading"}).text.replace("\n","")
+                    tmp_text = item.find("h3").text.replace("\n","")
                 except Exception:
                     tmp_text = ''
                 try:
-                    tmp_link = item.find("a").get("href")
+                    tmp_link = item.get("href").replace('/url?esrc=s&q=&rct=j&sa=U&url=','')
                 except Exception:
                     tmp_link = ''
                 try:
-                    tmp_media = item.findAll("g-img")[1].parent.text
+                    tmp_media = item.find('div').find('div').find('div').find_next_sibling('div').text
                 except Exception:
                     tmp_media = ''
                 try:
-                    tmp_date = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').findNext('div').text
+                    tmp_date = item.find('div').find_next_sibling('div').find('span').text
                     tmp_date,tmp_datetime=lexical_date_parser(tmp_date)
                 except Exception:
                     tmp_date = ''
                     tmp_datetime=None
                 try:
-                    tmp_desc = item.find("div", {"role" : "heading"}).next_sibling.findNext('div').text.replace("\n","")
+                    tmp_desc = self.remove_after_last_fullstop(item.find('div').find_next_sibling('div').find('div').find_next_sibling('div').find('div').find('div').find('div').text).replace('\n','')
                 except Exception:
                     tmp_desc = ''
                 try:
-                    tmp_img = item.findAll("g-img")[0].find("img").get("src")
+                    tmp_img = item.find("img").get("src")
                 except Exception:
                     tmp_img = ''
                 self.__texts.append(tmp_text)
@@ -239,7 +270,10 @@ class GoogleNews:
             self.response.close()
         except Exception as e_parser:
             print(e_parser)
-            pass
+            if self.__exception:
+                raise Exception(e_parser)
+            else:
+                pass
 
     def getpage(self, page=1):
         """Don't remove this, will affect old version user when upgrade"""
@@ -247,12 +281,31 @@ class GoogleNews:
 
     def get_news(self, key="",deamplify=False):
         if key != '':
-            key = "+".join(key.split(" "))
-            if self.__encode != "":
-                key = urllib.request.quote(key.encode(self.__encode))
-            self.url = 'https://news.google.com/search?q={}+when:{}&hl={}'.format(key,self.__period,self.__lang.lower())
+            if self.__period != "":
+                key += f" when:{self.__period}"
         else:
-            self.url = 'https://news.google.com/?hl={}'.format(self.__lang)
+            if self.__period != "":
+                key += f"when:{self.__period}"
+        key = urllib.request.quote(key.encode(self.__encode))
+        start = f'{self.__start[-4:]}-{self.__start[:2]}-{self.__start[3:5]}'
+        end = f'{self.__end[-4:]}-{self.__end[:2]}-{self.__end[3:5]}'
+        
+        if self.__start == '' or self.__end == '':
+            self.url = 'https://news.google.com/search?q={}&hl={}'.format(
+                key, self.__lang.lower())
+        else:
+            self.url = 'https://news.google.com/search?q={}+before:{}+after:{}&hl={}'.format(
+                key, end, start, self.__lang.lower())
+        
+        if self.__topic:
+            self.url = 'https://news.google.com/topics/{}'.format(
+                self.__topic)
+            
+            if self.__section:
+                self.url = 'https://news.google.com/topics/{}/sections/{}'.format(
+                self.__topic, self.__section)
+                
+            
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
             if self.req.type not in ('http', 'https'):
@@ -260,17 +313,17 @@ class GoogleNews:
             self.response = urllib.request.urlopen(self.req)  # nosec
             self.page = self.response.read()
             self.content = Soup(self.page, "html.parser")
-            articles = self.content.select('div[class="NiLAwe y6IFtc R7GTQ keNKEd j7vNaf nID9nc"]')
+            articles = self.content.find_all("c-wiz", attrs={"data-node-index": re.compile(r"^1;")})
             for article in articles:
                 try:
                     # title
                     try:
-                        title=article.find('h3').text
+                        title=article.findAll('a')[1].text
                     except:
                         title=None
                     # description
                     try:
-                        desc=article.find('span').text
+                        desc=None
                     except:
                         desc=None
                     # date
@@ -288,19 +341,23 @@ class GoogleNews:
                     # link
                     if deamplify:
                         try:
-                            link = 'news.google.com/' + article.find("h3").find("a").get("href")
+                            link = 'https://news.google.com/' + article.find("a").get("href")[2:]
                         except Exception as deamp_e:
                             print(deamp_e)
                             link = article.find("article").get("jslog").split('2:')[1].split(';')[0]
                     else:
-                            link = 'news.google.com/' + article.find("h3").find("a").get("href")
+                        try:
+                            link = 'https://news.google.com/' + article.find("a").get("href")[2:]
+                        except Exception as deamp_e:
+                            print(deamp_e)
+                            link = None
                     self.__texts.append(title)
                     self.__links.append(link)
-                    if link.startswith('https://www.youtube.com/watch?v='):
+                    if link is not None and link.startswith('https://www.youtube.com/watch?v='):
                         desc = 'video'
                     # image
                     try:
-                        img = article.find("img").get("src")
+                        img = 'https://news.google.com'+article.find("figure").find("img").get("src")
                     except:
                         img = None
                     # site
@@ -308,6 +365,15 @@ class GoogleNews:
                         site=article.find("time").parent.find("a").text
                     except:
                         site=None
+                    try:
+                        media=article.find_all("div", attrs={"data-n-tid": True})[-1].text
+                    except:
+                        media=None
+                    # reporter
+                    try:
+                        reporter = article.findAll('span')[2].text
+                    except:
+                        reporter = None
                     # collection
                     self.__results.append({'title':title,
                                            'desc':desc,
@@ -315,14 +381,18 @@ class GoogleNews:
                                            'datetime':define_date(date),
                                            'link':link,
                                            'img':img,
-                                           'media':None,
-                                           'site':site})
+                                           'media':media,
+                                           'site':site,
+                                           'reporter':reporter})
                 except Exception as e_article:
                     print(e_article)
             self.response.close()
         except Exception as e_parser:
             print(e_parser)
-            pass
+            if self.__exception:
+                raise Exception(e_parser)
+            else:
+                pass
 
     def total_count(self):
         return self.__totalcount
@@ -340,6 +410,10 @@ class GoogleNews:
                 results.sort(key = lambda x:x['datetime'],reverse=True)
             except Exception as e_sort:
                 print(e_sort)
+                if self.__exception:
+                    raise Exception(e_sort)
+                else:
+                    pass
                 results=self.__results
         return results
 

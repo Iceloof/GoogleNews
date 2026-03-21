@@ -1,6 +1,6 @@
 # GoogleNews
 
-[![Build Status](https://travis-ci.com/Iceloof/GoogleNews.svg)](https://travis-ci.com/Iceloof/GoogleNews)
+[![Build Status](https://app.travis-ci.com/Iceloof/GoogleNews.svg)](https://app.travis-ci.com/github/Iceloof/GoogleNews)
 [![Coverage Status](https://coveralls.io/repos/github/Iceloof/GoogleNews/badge.svg)](https://coveralls.io/github/Iceloof/GoogleNews)
 [![PyPI](https://img.shields.io/pypi/v/GoogleNews)](https://pypi.org/project/GoogleNews/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/GoogleNews)](https://pypistats.org/packages/googlenews)
@@ -25,7 +25,15 @@ pip install --upgrade GoogleNews
 from GoogleNews import GoogleNews
 googlenews = GoogleNews()
 ```
-- Optional choose language and region, you can use lanaguage only, default language will be 'en'
+- Check version
+```
+print(googlenews.getVersion())
+```
+- Enable to throw exception
+```
+googlenews.enableException(True)
+```
+- Optional choose language
 ```
 googlenews = GoogleNews(lang='en')
 ```
@@ -56,7 +64,22 @@ googlenews.set_encode('utf-8')
 ```
 googlenews.get_news('APPLE')
 ```
-- **google.com** section news search sample
+- **news.google.com get news by topics
+```
+# Sports
+googlenews.set_topic('CAAqKggKIiRDQkFTRlFvSUwyMHZNRFp1ZEdvU0JYQjBMVUpTR2dKQ1VpZ0FQAQ')
+googlenews.get_news()
+```
+- **news.google.com get news by topic and sections
+```
+# Sports
+googlenews.set_topic('CAAqKggKIiRDQkFTRlFvSUwyMHZNRFp1ZEdvU0JYQjBMVUpTR2dKQ1VpZ0FQAQ')
+# Football Soccer
+googlenews.set_section('CAQiS0NCQVNNZ29JTDIwdk1EWnVkR29TQlhCMExVSlNHZ0pDVWlJT0NBUWFDZ29JTDIwdk1ESjJlRFFxQ3dvSkVnZEdkWFJsWW05c0tBQSouCAAqKggKIiRDQkFTRlFvSUwyMHZNRFp1ZEdvU0JYQjBMVUpTR2dKQ1VpZ0FQAVAB')
+
+googlenews.get_news()
+```
+- **google.com** section news search sample (Not working anymore)
 ```
 googlenews.search('APPLE')
 ```
@@ -70,7 +93,7 @@ googlenews.get_page(2)
 ```
 result = googlenews.page_at(2)
 ```
-- If you want to get the total result number of the search(this is approximate number, not exact number, it is the number showing on the google search page)
+- If you want to get the total result number of the search(this is approximate number, not exact number, it is the number showing on the google search page) (Note: this function is not available for `googlenews.search()`)
 ```
 googlenews.total_count()
 ```
