@@ -118,7 +118,9 @@ class GoogleNews:
 
     def build_response(self):
         self.req = urllib.request.Request(self.url.replace("search?","search?hl=en&gl=en&"), headers=self.headers)
-        self.response = urllib.request.urlopen(self.req)
+        if self.req.type not in ('http', 'https'):
+            raise ValueError(f"Unsupported URL scheme: {self.req.type}")
+        self.response = urllib.request.urlopen(self.req)  # nosec
         self.page = self.response.read()
         self.content = Soup(self.page, "html.parser")
         stats = self.content.find_all("div", id="result-stats")
@@ -253,7 +255,9 @@ class GoogleNews:
             self.url = 'https://news.google.com/?hl={}'.format(self.__lang)
         try:
             self.req = urllib.request.Request(self.url, headers=self.headers)
-            self.response = urllib.request.urlopen(self.req)
+            if self.req.type not in ('http', 'https'):
+                raise ValueError(f"Unsupported URL scheme: {self.req.type}")
+            self.response = urllib.request.urlopen(self.req)  # nosec
             self.page = self.response.read()
             self.content = Soup(self.page, "html.parser")
             articles = self.content.select('div[class="NiLAwe y6IFtc R7GTQ keNKEd j7vNaf nID9nc"]')
